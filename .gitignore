@@ -1,8 +1,18 @@
+# Build Folder
+dist
+
+# NPM
 node_modules
+t
+# IDE Specific
+.vscode
 .idea
+
+# OS Specific
 .DS_Store
 
 # Logs
 logs
 
+# Env Files
 .env

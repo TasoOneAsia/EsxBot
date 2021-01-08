@@ -25,7 +25,7 @@ declare module 'discord-akairo' {
 
 export default class EsxBot extends AkairoClient {
   public db!: Connection;
-  public log!: Logger;
+  public log: Logger;
 
   public listenerHandler: ListenerHandler = new ListenerHandler(this, {
     directory: path.join(__dirname, '..', 'listeners'),
@@ -60,7 +60,7 @@ export default class EsxBot extends AkairoClient {
     });
 
     this.log = new Logger({
-      name: 'BASE',
+      name: 'Init',
       displayLoggerName: true,
     });
   }
@@ -133,6 +133,6 @@ export default class EsxBot extends AkairoClient {
   private static _logToTransport(logObj: ILogObject) {
     const outDir = LOG_OUTPUT_PATH;
     !fs.existsSync(outDir) && fs.mkdirSync(outDir);
-    fs.appendFileSync(path.join(outDir, 'logs.txt'), JSON.stringify(logObj) + '\n');
+    fs.appendFileSync(path.join(outDir, 'bot.log'), JSON.stringify(logObj) + '\n');
   }
 }
