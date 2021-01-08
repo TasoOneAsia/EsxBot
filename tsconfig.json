@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "dist",
-    "target": "es2019",
+    "target": "ES6",
     "strict": true,
     "lib": [
       "ESNext",
@@ -13,22 +13,11 @@
       "DOM"
     ],
     "sourceMap": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "incremental": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
-  "typeRoots": [
-    "../../node_modules",
-    "../../node_modules/@types",
-    "../definitions"
-  ],
   "include": ["./src/**/*"],
-  "exclude": [
-    "node_modules",
-    ".vscode"
-  ]
+  "exclude": ["node_modules", ".vscode"]
 }
