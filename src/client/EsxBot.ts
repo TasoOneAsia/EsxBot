@@ -8,7 +8,6 @@ import {
   LOG_TO_FILE,
   LOG_VERBOSITY,
   LOG_OUTPUT_PATH,
-  BOT_TOKEN,
 } from '../config';
 import { Logger, ILogObject } from 'tslog';
 import path from 'path';
@@ -68,10 +67,11 @@ export default class EsxBot extends AkairoClient {
   public async start(): Promise<string> {
     this.log.info('Starting Initialization Sequence');
     await this._init();
-    return this.login(BOT_TOKEN);
+    return this.login(process.env.BOT_TOKEN);
   }
 
   private async _init(): Promise<void> {
+    this.log.debug(`Out Dir: ${LOG_OUTPUT_PATH}`);
     this._attachLoggerTransports();
 
     this.commandHandler.useListenerHandler(this.listenerHandler);
