@@ -1,29 +1,34 @@
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
-import { discordCodeBlock, byteToGB } from '../../utils/miscUtils';
+import { discordCodeBlock, byteToGB, msToFormatted } from '../../utils/miscUtils';
 import sysInfo from 'systeminformation';
 
 export default class StatusCommand extends Command {
+  private _uptimeString: string | undefined;
+
   constructor() {
     super('status', {
       aliases: ['status', 'stats', 'stat'],
-      category: 'debug',
+      category: 'Debug',
       ownerOnly: true,
       description: {
         content: 'Returns stats for Guild and Bot',
         usage: '!status',
-        examples: ['!status', '!stats', '!stat'],
+        examples: ['status'],
       },
     });
   }
 
   public async exec(msg: Message): Promise<Message | void> {
     if (!msg.guild) return;
-    const embed = await StatusCommand._createStatsEmbed(msg);
+    const embed = await StatusCommand._createStatsEmbed(msg, <number>this.client.uptime);
     return msg.channel.send(embed);
   }
 
-  private static async _createStatsEmbed(msg: Message): Promise<MessageEmbed> {
+  private static async _createStatsEmbed(
+    msg: Message,
+    uptime: number
+  ): Promise<MessageEmbed> {
     const sysMem = await sysInfo.mem();
 
     return (
@@ -42,7 +47,7 @@ export default class StatusCommand extends Command {
           },
           {
             name: 'Uptime',
-            value: discordCodeBlock(Math.floor(process.uptime())),
+            value: discordCodeBlock(msToFormatted(uptime)),
             inline: true,
           },
           {
