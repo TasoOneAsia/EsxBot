@@ -1,5 +1,6 @@
 import { ConnectionManager } from 'typeorm';
 import Infracts from '../models/Infractions';
+import GuildSettings from '../models/GuildSettings';
 
 const connectManager = new ConnectionManager();
 
@@ -11,7 +12,8 @@ connectManager.create({
   database: process.env.DB_NAME || 'EsxBot',
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: [Infracts],
+  entities: [Infracts, GuildSettings],
+  synchronize: true,
 });
 
 export default connectManager;

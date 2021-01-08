@@ -2,18 +2,37 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export default class Infractions {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    type: 'integer',
+  })
   infractionID!: number;
 
-  @Column()
-  infractionType!: 'ban' | 'kick' | 'warn';
+  @Column({
+    type: 'varchar',
+    length: 10,
+    nullable: false,
+  })
+  infractionType!: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 64,
+    nullable: false,
+  })
   user!: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 64,
+    nullable: false,
+  })
   staffMember!: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+    default: 'No reason provided',
+  })
   reason!: string;
 }

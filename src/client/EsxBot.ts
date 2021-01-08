@@ -107,7 +107,6 @@ export default class EsxBot extends AkairoClient {
     this.log.info('Starting DB Connect and Sync');
     try {
       await this.db.connect();
-      await this.db.synchronize();
       this.log.info('DB Connected and Synced');
     } catch (e) {
       this.log.error(e);
