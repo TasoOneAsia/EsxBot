@@ -24,7 +24,11 @@ declare module 'discord-akairo' {
 
 export default class EsxBot extends AkairoClient {
   public db!: Connection;
-  public log: Logger;
+
+  public log: Logger = new Logger({
+    name: 'Init',
+    displayLoggerName: true,
+  });
 
   public listenerHandler: ListenerHandler = new ListenerHandler(this, {
     directory: path.join(__dirname, '..', 'listeners'),
@@ -57,11 +61,6 @@ export default class EsxBot extends AkairoClient {
     super({
       ownerID: OWNER_IDS,
     });
-
-    this.log = new Logger({
-      name: 'Init',
-      displayLoggerName: true,
-    });
   }
 
   public async start(): Promise<string> {
@@ -72,7 +71,6 @@ export default class EsxBot extends AkairoClient {
 
   private async _init(): Promise<void> {
     this.log.debug(`Out Dir: ${LOG_OUTPUT_PATH}`);
-    this._attachLoggerTransports();
 
     this.commandHandler.useListenerHandler(this.listenerHandler);
 
@@ -85,13 +83,13 @@ export default class EsxBot extends AkairoClient {
     if (LOG_TO_FILE) {
       this.log.attachTransport(
         {
-          silly: EsxBot._logToTransport,
-          debug: EsxBot._logToTransport,
-          trace: EsxBot._logToTransport,
-          info: EsxBot._logToTransport,
-          warn: EsxBot._logToTransport,
-          error: EsxBot._logToTransport,
-          fatal: EsxBot._logToTransport,
+          silly: this._logToTransport,
+          debug: this._logToTransport,
+          trace: this._logToTransport,
+          info: this._logToTransport,
+          warn: this._logToTransport,
+          error: this._logToTransport,
+          fatal: this._logToTransport,
         },
         LOG_VERBOSITY
       );
@@ -113,26 +111,37 @@ export default class EsxBot extends AkairoClient {
     }
   }
 
-  private _attachLoggerTransports() {
-    if (LOG_TO_FILE) {
-      this.log.attachTransport(
-        {
-          silly: EsxBot._logToTransport,
-          debug: EsxBot._logToTransport,
-          trace: EsxBot._logToTransport,
-          info: EsxBot._logToTransport,
-          warn: EsxBot._logToTransport,
-          error: EsxBot._logToTransport,
-          fatal: EsxBot._logToTransport,
-        },
-        LOG_VERBOSITY
-      );
-    }
-  }
-
-  private static _logToTransport(logObj: ILogObject) {
+  private _logToTransport(logObj: ILogObject) {
     const outDir = LOG_OUTPUT_PATH;
-    !fs.existsSync(outDir) && fs.mkdirSync(outDir);
-    fs.appendFileSync(path.join(outDir, 'bot.log'), JSON.stringify(logObj) + '\n');
+
+    const logOut = (logObj: ILogObject, type: 'error' | 'main' | 'debug') => {
+      fs.appendFileSync(path.join(outDir, `${type}.log`), JSON.stringify(logObj) + '\n');
+    };
+
+    try {
+      !fs.existsSync(outDir) && fs.mkdirSync(outDir);
+    } catch (e) {
+      this.log.error(e);
+    }
+
+    switch (logObj.logLevel) {
+      case 'debug':
+        logOut(logObj, 'debug');
+        break;
+      case 'error':
+        logOut(logObj, 'error');
+        break;
+      case 'fatal':
+        logOut(logObj, 'error');
+        break;
+      case 'info':
+        logOut(logObj, 'main');
+        break;
+      case 'trace':
+        logOut(logObj, 'debug');
+        break;
+      case 'warn':
+        logOut(logObj, 'main');
+    }
   }
 }
