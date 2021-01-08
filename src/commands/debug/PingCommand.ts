@@ -11,7 +11,7 @@ export default class PingCommand extends Command {
         content: "Return Bot's latency info",
         usage: 'ping [--keep]',
       },
-      category: 'debug',
+      category: 'Debug',
       ownerOnly: true,
       args: [
         {
