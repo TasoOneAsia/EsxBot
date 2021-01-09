@@ -3,6 +3,7 @@ import { Message, GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 
 import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
+import { Repository } from 'typeorm';
 
 interface IWarnArgs {
   member: GuildMember;
@@ -45,8 +46,24 @@ export default class WarnCommand extends Command {
     });
   }
   public async exec(msg: Message, { member, reason }: IWarnArgs): Promise<Message> {
-    this._logger.debug(`Member Resolved: ${member.id}`);
+    try {
+      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
+        Infractions
+      );
 
-    return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
+      await infractionsRepo.insert({
+        user: member.id,
+        staffMember: msg.author.id,
+        reason: reason,
+        infractionType: 'warn',
+      });
+
+      this._logger.debug(`Member Resolved: ${member.id}`);
+
+      return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
+    } catch (e) {
+      this._logger.error(e);
+      return msg.channel.send('Error');
+    }
   }
 }
