@@ -19,6 +19,7 @@ export default class KickCommand extends Command {
         examples: ['kick @Taso disruptive', 'kick 188181246600282113 Bad coder'],
       },
       userPermissions: ['KICK_MEMBERS'],
+      channel: 'guild',
       args: [
         {
           id: 'member',

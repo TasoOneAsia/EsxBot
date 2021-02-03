@@ -9,16 +9,16 @@ export default class PingCommand extends Command {
       aliases: ['ping'],
       description: {
         content: "Return Bot's latency info",
-        usage: 'ping [--keep]',
+        usage: 'ping',
       },
       category: 'Debug',
-      ownerOnly: true,
       args: [
         {
           id: 'keepData',
           flag: 'keep',
         },
       ],
+      channel: 'guild',
     });
   }
 

@@ -1,15 +1,11 @@
 import { Command, CommandHandler } from 'discord-akairo';
-import { Message, GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 
 import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
 import { modLogEmbed } from '../../utils/moderationUtils';
-
-interface IWarnArgs {
-  member: GuildMember;
-  reason: string;
-}
+import { IModActionArgs } from '../../types';
 
 export default class WarnCommand extends Command {
   private readonly _logger: Logger;
@@ -24,6 +20,7 @@ export default class WarnCommand extends Command {
         examples: ['warn @Taso Bad coder', 'warn 188181246600282113 Bad coder'],
       },
       userPermissions: ['KICK_MEMBERS'],
+      channel: 'guild',
       args: [
         {
           id: 'member',
@@ -46,7 +43,7 @@ export default class WarnCommand extends Command {
       name: 'WarnCommandLogger',
     });
   }
-  public async exec(msg: Message, { member, reason }: IWarnArgs): Promise<Message> {
+  public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
     try {
       const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
         Infractions

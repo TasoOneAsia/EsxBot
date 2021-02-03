@@ -10,7 +10,6 @@ export default class StatusCommand extends Command {
     super('status', {
       aliases: ['status', 'stats', 'stat'],
       category: 'Debug',
-      ownerOnly: true,
       description: {
         content: 'Returns stats for Guild and Bot',
         usage: 'status',
