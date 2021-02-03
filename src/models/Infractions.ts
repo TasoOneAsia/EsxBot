@@ -10,29 +10,32 @@ export default class Infractions {
   @Column({
     type: 'varchar',
     length: 10,
-    nullable: false,
   })
   infractionType!: string;
 
   @Column({
     type: 'varchar',
     length: 64,
-    nullable: false,
   })
   user!: string;
 
   @Column({
     type: 'varchar',
     length: 64,
-    nullable: false,
   })
   staffMember!: string;
 
   @Column({
     type: 'varchar',
     length: 255,
-    nullable: false,
     default: 'No reason provided',
   })
   reason!: string;
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  unbanDate!: number;
+
+  perma!: boolean;
 }

@@ -1,14 +1,24 @@
 import { EmbedField, GuildMember, MessageEmbed, User } from 'discord.js';
 import { Logger } from 'tslog';
 import { discordCodeBlock } from './miscUtils';
+import { ModAction } from '../types';
 
 interface IModLogEmbed {
-  action: 'kick' | 'warn' | 'ban';
-  reason?: string;
+  action: ModAction;
+  reason: string;
   member: GuildMember;
   staffMember: User;
   fields?: EmbedField[];
   logger: Logger;
+}
+
+interface IActionEmbed {
+  action: ModAction;
+  reason: string;
+  member: GuildMember;
+  staffMember: User;
+  logger: Logger;
+  fields?: EmbedField[];
 }
 
 export const modLogEmbed = ({
@@ -47,6 +57,46 @@ export const modLogEmbed = ({
       },
     ]);
   if (reason) embed.addField('Reason', discordCodeBlock(reason));
+
+  if (fields) embed.addFields(fields);
+
+  return embed;
+};
+
+export const actionMessageEmbed = ({
+  action,
+  reason,
+  staffMember,
+  member,
+  logger,
+  fields,
+}: IActionEmbed): MessageEmbed => {
+  const dmLog = logger.getChildLogger({
+    name: 'ActionDM',
+    prefix: ['ActionDM'],
+  });
+
+  dmLog.debug(`Sending action (${action}) DM to ${member.user.tag}`);
+
+  const embed = new MessageEmbed()
+    .setThumbnail(member.user.displayAvatarURL())
+    .setTitle('Received Mod Action')
+    .setTimestamp()
+    .setDescription('You have received a moderator action from the ESX Guild')
+    .addFields([
+      {
+        name: 'Action',
+        value: discordCodeBlock(action),
+      },
+      {
+        name: 'Staff Member',
+        value: discordCodeBlock(staffMember.tag),
+      },
+      {
+        name: 'Reason',
+        value: discordCodeBlock(reason),
+      },
+    ]);
 
   if (fields) embed.addFields(fields);
 

@@ -17,3 +17,12 @@ export const msToFormatted = (ms: number): string => {
 
   return `${d}d ${h}h ${m}m ${s}s`;
 };
+
+export const parseTimeFromString = (str: string): number | null => {
+  const validTimes = { m: 60000, h: 3600000, d: 86400000 };
+  const match = str.match(/(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)([d,h,m,s])/);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (match && validTimes[match[2]]) return parseInt(match[1] * validTimes[match[2]]);
+  return null;
+};
