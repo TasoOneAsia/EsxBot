@@ -4,6 +4,7 @@ import { Message, GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
+import { modLogEmbed } from '../../utils/moderationUtils';
 
 interface IWarnArgs {
   member: GuildMember;
@@ -11,7 +12,7 @@ interface IWarnArgs {
 }
 
 export default class WarnCommand extends Command {
-  private _logger: Logger;
+  private readonly _logger: Logger;
 
   public constructor(handler: CommandHandler) {
     super('warn', {
@@ -60,10 +61,34 @@ export default class WarnCommand extends Command {
 
       this._logger.debug(`Member Resolved: ${member.id}`);
 
+      const modEmbed = modLogEmbed({
+        member: member,
+        staffMember: msg.author,
+        action: 'warn',
+        reason,
+        logger: this._logger,
+      });
+
+      await this._sendToModLog(modEmbed);
+
       return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
     } catch (e) {
       this._logger.error(e);
-      return msg.channel.send('Error');
+      return msg.channel.send('Error has occurred');
+    }
+  }
+
+  private async _sendToModLog(embed: MessageEmbed) {
+    if (!process.env.LOG_CHANNEL_ID)
+      throw new Error('LOG_CHANNEL Env variable not defined');
+
+    const channel = this.client.channels.cache.get(
+      <string>process.env.LOG_CHANNEL_ID
+    ) as TextChannel;
+    try {
+      await channel.send(embed);
+    } catch (e) {
+      this._logger.error(e);
     }
   }
 }
