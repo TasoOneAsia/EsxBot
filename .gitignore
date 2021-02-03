@@ -16,3 +16,6 @@ logs
 
 # Env Files
 .env
+
+# SQLite DB
+esx.sqlite
