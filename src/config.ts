@@ -9,3 +9,18 @@ export const DEFAULT_PREFIX = '!';
 export const LOG_TO_FILE = true;
 export const LOG_VERBOSITY = 'info';
 export const LOG_OUTPUT_PATH = path.resolve('logs');
+
+export const RULES = [
+  'Be cool, kind, and civil. Treat all members with respect.',
+  'Do not spam (especially other discord servers). No self-promotion.',
+  'No harassment, abuse, racism, sexism or otherwise offensive content.',
+  'Do not tag/pm staff/support team. Use the proper channels.',
+  `You are not allowed to use the #releases and #snippets channels, unless you're sharing something for free.`,
+  'It is forbidden to sell resources in this Discord, this is not a script market.',
+  `Don't expect us to hold your hand entirely - we can help you understand concepts and locate the correct resources, but not write your code for you.`,
+  'No advertising (This includes your YouTube channel, Discord server, RP server, and your paid scripts.)',
+  'No support for leaked/stolen/paid scripts. (Even if the creator sends you here, we will not provide support for their scripts)',
+  'No support for cheating.',
+  'Do not offer money for services of any kind.',
+  'The #framework-support channel is for ESX Framework scripts only, not whatever random script you found online.',
+];
