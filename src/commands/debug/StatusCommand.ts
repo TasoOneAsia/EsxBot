@@ -13,7 +13,7 @@ export default class StatusCommand extends Command {
       ownerOnly: true,
       description: {
         content: 'Returns stats for Guild and Bot',
-        usage: '!status',
+        usage: 'status',
         examples: ['status'],
       },
     });
