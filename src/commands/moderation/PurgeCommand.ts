@@ -1,5 +1,5 @@
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
-import { Command, CommandHandler } from 'discord-akairo';
+import { Command, CommandHandler, Argument } from 'discord-akairo';
 import { Logger } from 'tslog';
 
 interface IPurgeArgs {
@@ -26,12 +26,12 @@ export default class PurgeCommand extends Command {
       args: [
         {
           id: 'amount',
-          type: 'integer',
+          type: Argument.range('number', 1, 101),
           prompt: {
             start: (message: Message): string =>
               `${message.author}, how many message would you like to delete?`,
             retry: (message: Message): string =>
-              `${message.author}, please enter a valid number.`,
+              `${message.author}, Please enter a number within 1-100`,
             retries: 2,
           },
         },
@@ -53,9 +53,6 @@ export default class PurgeCommand extends Command {
     msg: Message,
     { amount, member }: IPurgeArgs
   ): Promise<Message | void> {
-    if (amount < 2 || amount > 99)
-      return msg.channel.send('You can only bulk-delete between 1 and 100 messages.');
-
     try {
       // Execute if provide member arg
       if (member) {
