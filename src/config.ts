@@ -1,15 +1,16 @@
-//Debug Logging
 import path from 'path';
 
+/*
+ * Misc Bot Settings
+ */
+
+// Bot Owner ID's
 export const OWNER_IDS = ['188181246600282113', '292423857204363265'];
 
+// Default prefix
 export const DEFAULT_PREFIX = '!';
 
-// Logging Configs
-export const LOG_TO_FILE = true;
-export const LOG_VERBOSITY = 'info';
-export const LOG_OUTPUT_PATH = path.resolve('logs');
-
+// Rules Embed Template
 export const RULES = [
   'Be cool, kind, and civil. Treat all members with respect.',
   'Do not spam (especially other discord servers). No self-promotion.',
@@ -24,3 +25,20 @@ export const RULES = [
   'Do not offer money for services of any kind.',
   'The #framework-support channel is for ESX Framework scripts only, not whatever random script you found online.',
 ];
+
+// The react emoji for the `newbie` role
+export const NEWBIE_ROLE_EMOTE = '🤯';
+
+// The react emoji for the `developer` role
+export const DEVELOPER_ROLE_EMOTE = '😀';
+
+/*
+ * Logging Config Options
+ */
+
+// Log to file
+export const LOG_TO_FILE = true;
+// Log out verbosity
+export const LOG_VERBOSITY = 'info';
+// Will automatically log to `root_directory/logs`
+export const LOG_OUTPUT_PATH = path.resolve('logs');

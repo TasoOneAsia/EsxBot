@@ -1,6 +1,7 @@
 import { Listener, ListenerHandler } from 'discord-akairo';
 import { MessageReaction, User } from 'discord.js';
 import { Logger } from 'tslog';
+import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
 
 export default class RoleAddReactListener extends Listener {
   private readonly _logger: Logger;
@@ -28,12 +29,12 @@ export default class RoleAddReactListener extends Listener {
         <string>process.env.DEVELOPER_ROLE_ID
       );
 
-      if (reaction.emoji.name === '👍' && newbieRole) {
+      if (reaction.emoji.name === NEWBIE_ROLE_EMOTE && newbieRole) {
         this._logger.debug(`Newbie role applied to ${member.username}`);
         await guildMember?.roles.add(newbieRole);
       }
 
-      if (reaction.emoji.name === '👎' && devRole) {
+      if (reaction.emoji.name === DEVELOPER_ROLE_EMOTE && devRole) {
         this._logger.debug(`Dev role applied to ${member.username}`);
         await guildMember?.roles.add(devRole);
       }
