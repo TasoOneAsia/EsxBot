@@ -1,4 +1,5 @@
 import { Message } from 'discord.js';
+import { parseTimeFromString } from '../utils';
 import EsxBot from '../client/EsxBot';
 
 export const duration = (EsxBot: EsxBot, message: Message, phrase: string): any => {
