@@ -27,5 +27,6 @@ export const cleanStack = (
   { pretty, basePath }: ICleanStackOpts = {}
 ): string => {
   //const basePathRegex = basePath && new RegExp(`(at | \\()${escapeStringRegexp(basePath)}`, 'g');
+  const homeDir = process.cwd().replace(/\\/g, '\\\\');
   return stack.replace(new RegExp(homeDir, 'g'), '~').replace(/\\/g, '/');
 };

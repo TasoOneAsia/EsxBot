@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 interface IBanAction {
   member: GuildMember;
   reason: string;
-  duration: string;
+  duration: number | 'perma' | null;
 }
 
 export default class BanCommand extends Command {
@@ -43,9 +43,12 @@ export default class BanCommand extends Command {
         },
         {
           id: 'duration',
+          type: 'duration',
           prompt: {
-            start: (msg: Message) => `${msg.author}, please provide a duration`,
-            retry: (msg: Message) => `${msg.author}, please provide a duration`,
+            start: (msg: Message) =>
+              `${msg.author}, please provide a duration \`1d, 1h, 1m\``,
+            retry: (msg: Message) =>
+              `${msg.author}, please provide a duration \`1d, 1h, 1m\``,
           },
         },
         {
@@ -104,11 +107,9 @@ export default class BanCommand extends Command {
         return msg.channel.send(`**${member.user.tag}** was banned for **${reason}**`);
       }
 
-      const parsedTime = parseTimeFromString(duration);
+      if (!duration) return msg.reply('Incorrect date format');
 
-      if (!parsedTime) return msg.reply('Incorrect date format');
-
-      const unbanDate = dayjs().add(parsedTime as number, 'ms');
+      const unbanDate = dayjs().add(duration as number, 'ms');
 
       await infractionsRepo.insert({
         user: member.id,

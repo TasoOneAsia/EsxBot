@@ -4,6 +4,7 @@ import EsxBot from '../client/EsxBot';
 
 export const duration = (EsxBot: EsxBot, message: Message, phrase: string): any => {
   if (!phrase) return null;
+  if (phrase == 'perma') return 'perma';
 
   return parseTimeFromString(phrase);
 };
