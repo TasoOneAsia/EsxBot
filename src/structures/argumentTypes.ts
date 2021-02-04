@@ -3,7 +3,9 @@ import { parseTimeFromString } from '../utils';
 import EsxBot from '../client/EsxBot';
 
 export const duration = (EsxBot: EsxBot, message: Message, phrase: string): any => {
-  return 1;
+  if (!phrase) return null;
+
+  return parseTimeFromString(phrase);
 };
 
 export const othermembers = (EsxBot: EsxBot, message: Message, phrase: string): any => {
