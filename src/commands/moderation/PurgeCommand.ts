@@ -21,6 +21,7 @@ export default class PurgeCommand extends Command {
       category: 'Moderation',
       clientPermissions: ['MANAGE_MESSAGES'],
       userPermissions: ['MANAGE_MESSAGES'],
+      channel: 'guild',
       ratelimit: 2,
       args: [
         {
