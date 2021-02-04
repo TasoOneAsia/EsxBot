@@ -1,6 +1,3 @@
-import path from 'path';
-import escapeStringRegexp from 'escape-string-regexp';
-
 const extractPathRegex = /\s+at.*[(\s](.*)\)?/g;
 const pathRegex = /^(?:(?:(?:node|(?:(?:node:)?internal\/[\w/]*|.*node_modules\/(?:babel-polyfill|pirates)\/.*)?\w+)(?:\.js)?:\d+:\d+)|native)/;
 const homeDir = process.cwd().replace(/\\/g, '\\\\');
@@ -27,6 +24,5 @@ export const cleanStack = (
   { pretty, basePath }: ICleanStackOpts = {}
 ): string => {
   //const basePathRegex = basePath && new RegExp(`(at | \\()${escapeStringRegexp(basePath)}`, 'g');
-  const homeDir = process.cwd().replace(/\\/g, '\\\\');
   return stack.replace(new RegExp(homeDir, 'g'), '~').replace(/\\/g, '/');
 };

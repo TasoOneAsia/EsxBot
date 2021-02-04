@@ -1,7 +1,5 @@
 import { Command } from 'discord-akairo';
-import { Message, MessageEmbed } from 'discord.js';
-import { discordCodeBlock, byteToGB, msToFormatted } from '../../utils/miscUtils';
-import sysInfo from 'systeminformation';
+import { Message } from 'discord.js';
 
 export default class StatusCommand extends Command {
   constructor() {

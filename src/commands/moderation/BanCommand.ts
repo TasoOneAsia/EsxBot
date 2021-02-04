@@ -3,12 +3,7 @@ import { Logger } from 'tslog';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
-import {
-  discordCodeBlock,
-  parseTimeFromString,
-  actionMessageEmbed,
-  modActionEmbed,
-} from '../../utils';
+import { discordCodeBlock, actionMessageEmbed, modActionEmbed } from '../../utils';
 import dayjs from 'dayjs';
 
 interface IBanAction {
