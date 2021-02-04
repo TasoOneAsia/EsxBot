@@ -1,12 +1,13 @@
-import { Command } from 'discord-akairo';
+import { Command, CommandHandler } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import { discordCodeBlock, byteToGB, msToFormatted } from '../../utils/miscUtils';
 import sysInfo from 'systeminformation';
+import { Logger } from 'tslog';
 
 export default class StatusCommand extends Command {
-  private _uptimeString: string | undefined;
+  private readonly _logger: Logger;
 
-  constructor() {
+  constructor(handler: CommandHandler) {
     super('status', {
       aliases: ['status', 'stats', 'stat'],
       category: 'Debug',
@@ -15,11 +16,16 @@ export default class StatusCommand extends Command {
         usage: 'status',
         examples: ['status'],
       },
+      channel: 'guild',
+    });
+
+    this._logger = handler.client.log.getChildLogger({
+      name: 'StatusCmd',
+      prefix: ['[StatusCmd]'],
     });
   }
 
   public async exec(msg: Message): Promise<Message | void> {
-    if (!msg.guild) return;
     const embed = await StatusCommand._createStatsEmbed(msg, <number>this.client.uptime);
     return msg.channel.send(embed);
   }
@@ -29,7 +35,6 @@ export default class StatusCommand extends Command {
     uptime: number
   ): Promise<MessageEmbed> {
     const sysMem = await sysInfo.mem();
-
     return (
       new MessageEmbed()
         .setTitle('ESX Guild & Bot Stats')
@@ -41,7 +46,7 @@ export default class StatusCommand extends Command {
         .addFields([
           {
             name: 'Guild Members',
-            value: discordCodeBlock(msg.guild?.memberCount),
+            value: discordCodeBlock(msg.guild!.memberCount),
             inline: true,
           },
           {

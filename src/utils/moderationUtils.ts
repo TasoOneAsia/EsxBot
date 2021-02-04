@@ -13,7 +13,7 @@ interface IModLogEmbed {
 
 interface IActionEmbed {
   action: string;
-  reason?: string;
+  reason: string;
   member: GuildMember;
   staffMember: User;
   logger: Logger;
