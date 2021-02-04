@@ -1,10 +1,9 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-
 import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
-import { modLogEmbed } from '../../utils/moderationUtils';
+import { modActionEmbed } from '../../utils/moderationUtils';
 import { IModActionArgs } from '../../types';
 
 export default class WarnCommand extends Command {
@@ -58,7 +57,7 @@ export default class WarnCommand extends Command {
 
       this._logger.debug(`Member Resolved: ${member.id}`);
 
-      const modEmbed = modLogEmbed({
+      const modEmbed = modActionEmbed({
         member: member,
         staffMember: msg.author,
         action: 'warn',
@@ -67,7 +66,7 @@ export default class WarnCommand extends Command {
       });
 
       await this._sendToModLog(modEmbed);
-
+      msg.delete({ timeout: 3000 });
       return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
     } catch (e) {
       this._logger.error(e);

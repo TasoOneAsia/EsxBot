@@ -1,27 +1,26 @@
 import { EmbedField, GuildMember, MessageEmbed, User } from 'discord.js';
 import { Logger } from 'tslog';
 import { discordCodeBlock } from './miscUtils';
-import { ModAction } from '../types';
 
 interface IModLogEmbed {
-  action: ModAction;
-  reason: string;
+  action: string;
+  reason?: string;
   member: GuildMember;
-  staffMember: User;
+  staffMember?: User;
   fields?: EmbedField[];
   logger: Logger;
 }
 
 interface IActionEmbed {
-  action: ModAction;
-  reason: string;
+  action: string;
+  reason?: string;
   member: GuildMember;
   staffMember: User;
   logger: Logger;
   fields?: EmbedField[];
 }
 
-export const modLogEmbed = ({
+export const modActionEmbed = ({
   action,
   reason,
   member,
@@ -30,7 +29,7 @@ export const modLogEmbed = ({
   logger,
 }: IModLogEmbed): MessageEmbed => {
   const adminEventLog = logger.getChildLogger({
-    prefix: ['AdminLogEvent'],
+    prefix: ['[AdminLogEvent]'],
     name: 'AdminLog',
   });
 
@@ -39,8 +38,10 @@ export const modLogEmbed = ({
   const embed = new MessageEmbed()
     .setTimestamp()
     .setTitle(`${action.toUpperCase()} Event`)
-    .setThumbnail(member.user.displayAvatarURL())
-    .addFields([
+    .setThumbnail(member.user.displayAvatarURL());
+
+  if (member)
+    embed.addFields([
       {
         name: 'User',
         value: discordCodeBlock(member.user.tag),
@@ -51,11 +52,10 @@ export const modLogEmbed = ({
         value: discordCodeBlock(member.user.id),
         inline: true,
       },
-      {
-        name: 'Staff',
-        value: discordCodeBlock(staffMember.tag),
-      },
     ]);
+
+  if (staffMember) embed.addField('Staff', discordCodeBlock(staffMember.tag));
+
   if (reason) embed.addField('Reason', discordCodeBlock(reason));
 
   if (fields) embed.addFields(fields);
@@ -73,7 +73,7 @@ export const actionMessageEmbed = ({
 }: IActionEmbed): MessageEmbed => {
   const dmLog = logger.getChildLogger({
     name: 'ActionDM',
-    prefix: ['ActionDM'],
+    prefix: ['[ActionDM]'],
   });
 
   dmLog.debug(`Sending action (${action}) DM to ${member.user.tag}`);

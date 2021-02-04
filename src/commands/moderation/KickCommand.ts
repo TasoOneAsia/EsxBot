@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 import { IModActionArgs } from '../../types';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
-import { actionMessageEmbed, modLogEmbed } from '../../utils/moderationUtils';
+import { actionMessageEmbed, modActionEmbed } from '../../utils/moderationUtils';
 
 export default class KickCommand extends Command {
   private readonly _logger: Logger;
@@ -69,7 +69,7 @@ export default class KickCommand extends Command {
 
       this._logger.debug(`Member resolved: ${member.id}`);
 
-      const modEmbed = modLogEmbed({
+      const modEmbed = modActionEmbed({
         member: member,
         staffMember: msg.author,
         action: 'kick',

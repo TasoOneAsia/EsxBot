@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { discordCodeBlock, parseTimeFromString } from '../../utils/miscUtils';
 import dayjs from 'dayjs';
-import { actionMessageEmbed, modLogEmbed } from '../../utils/moderationUtils';
+import { actionMessageEmbed, modActionEmbed } from '../../utils/moderationUtils';
 
 interface IBanAction {
   member: GuildMember;
@@ -54,7 +54,7 @@ export default class BanCommand extends Command {
 
     this._logger = handler.client.log.getChildLogger({
       name: 'BanCommand',
-      prefix: ['BanCommand'],
+      prefix: ['[BanCommand]'],
     });
   }
   // TODO: Cleanup filth
@@ -66,6 +66,8 @@ export default class BanCommand extends Command {
       const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
         Infractions
       );
+
+      msg.delete({ timeout: 3000 });
 
       if (duration === 'perma') {
         await infractionsRepo.insert({
@@ -175,7 +177,7 @@ export default class BanCommand extends Command {
       ],
     });
 
-    const logEmbed = modLogEmbed({
+    const logEmbed = modActionEmbed({
       action: 'ban',
       staffMember: msg.author,
       reason,
