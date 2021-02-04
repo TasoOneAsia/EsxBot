@@ -31,6 +31,7 @@
     "discord-akairo": "github:1Computer1/discord-akairo",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "escape-string-regexp": "^4.0.0",
     "pg": "^8.5.1",
     "sqlite3": "^5.0.1",
     "systeminformation": "^4.34.5",
