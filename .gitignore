@@ -7,6 +7,7 @@ t
 # IDE Specific
 .vscode
 .idea
+*.code-workspace
 
 # OS Specific
 .DS_Store
