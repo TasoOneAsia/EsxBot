@@ -42,3 +42,14 @@ export const LOG_TO_FILE = true;
 export const LOG_VERBOSITY = 'info';
 // Will automatically log to `root_directory/logs`
 export const LOG_OUTPUT_PATH = path.resolve('logs');
+
+/*
+ *  FILTER OPTIONS
+ */
+
+// Will automatically create an array of roles that bypass filters for messages from .env
+export const FILTER_WHITELIST_ROLES = (<string>process.env.FILTER_WHITE_LIST_ROLES).split(
+  ','
+);
+// Messages containing these word will automatically be deleted
+export const BLACKLISTED_WORDS = ['zipperhead', 'idiot', 'moron'];
