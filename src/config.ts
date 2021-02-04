@@ -5,7 +5,11 @@ import path from 'path';
  */
 
 // Bot Owner ID's
-export const OWNER_IDS = ['188181246600282113', '292423857204363265'];
+export const OWNER_IDS = [
+  '188181246600282113',
+  '292423857204363265',
+  '662660857960071219',
+];
 
 // Default prefix
 export const DEFAULT_PREFIX = '!';
@@ -53,3 +57,8 @@ export const FILTER_WHITELIST_ROLES = (<string>process.env.FILTER_WHITE_LIST_ROL
 );
 // Messages containing these word will automatically be deleted
 export const BLACKLISTED_WORDS = ['zipperhead', 'idiot', 'moron'];
+
+/*
+ * CommandHandler settings
+ */
+export const DEFAULT_COOLDOWN = 9000;

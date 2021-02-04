@@ -8,6 +8,7 @@ import {
   LOG_TO_FILE,
   LOG_VERBOSITY,
   LOG_OUTPUT_PATH,
+  DEFAULT_COOLDOWN,
 } from '../config';
 import { Logger, ILogObject } from 'tslog';
 import path from 'path';
@@ -40,7 +41,7 @@ export default class EsxBot extends AkairoClient {
     handleEdits: true,
     commandUtil: true,
     commandUtilLifetime: 3e5,
-    defaultCooldown: 6e4,
+    defaultCooldown: DEFAULT_COOLDOWN,
     argumentDefaults: {
       prompt: {
         modifyStart: (_: Message, str: string): string =>
