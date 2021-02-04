@@ -20,9 +20,12 @@ export default class SetupCommand extends Command {
       args: [
         {
           id: 'type',
+          type: ['rules', 'role'],
           prompt: {
-            start: (msg: Message) => `${msg.author}, provide a valid type`,
-            retry: (msg: Message) => `${msg.author}, provide a valid type to setup`,
+            start: (msg: Message) =>
+              `${msg.author}, Please select a valid option for the \`setup\` command (\`rules\`, \`role\`)`,
+            retry: (msg: Message) =>
+              `${msg.author}, Please select a valid option for the \`setup\` command (\`rules\`, \`role\`)`,
           },
         },
       ],
@@ -43,10 +46,6 @@ export default class SetupCommand extends Command {
         case 'rules':
           await SetupCommand._setupRules(msg);
           break;
-        default:
-          return msg.reply(
-            'Please select a valid option for the `setup` command (`rules`, `role`)'
-          );
       }
       msg.delete({ timeout: 3000 });
     } catch (e) {
@@ -88,10 +87,10 @@ export default class SetupCommand extends Command {
       .setDescription(
         stripIndent`
         **Please react to this message with the emote you feel represents your skill**
-        
+
         **Newbie** ${NEWBIE_ROLE_EMOTE} - Newbie to ESX/FiveM without much prior knowledge.
         **Developer** ${DEVELOPER_ROLE_EMOTE} - Well versed with ESX & FiveM and has the skills to develop for it.
-        
+
         *If you wish to switch roles just remove your previous reaction and add a new one*
       `
       )
