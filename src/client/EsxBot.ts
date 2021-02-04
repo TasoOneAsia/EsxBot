@@ -1,5 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Message } from 'discord.js';
+import * as ArgumentTypes from '../structures/argumentTypes';
 import { Connection } from 'typeorm';
 import Database from '../structures/Database';
 import {
@@ -80,6 +81,10 @@ export default class EsxBot extends AkairoClient {
       listenerHandler: this.listenerHandler,
       process,
     });
+
+    for (const [name, func] of Object.entries(ArgumentTypes)) {
+      this.commandHandler.resolver.addType(name, func.bind(null, this));
+    }
 
     if (LOG_TO_FILE) {
       this.log.attachTransport(

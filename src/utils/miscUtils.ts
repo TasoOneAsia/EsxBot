@@ -1,6 +1,8 @@
 // FIXME: Types suck here, will improve after functionality
-export const discordCodeBlock = (str: string | number | undefined): string | void => {
-  if (str === typeof undefined) return;
+import { MessageEmbed } from 'discord.js';
+import { cleanStack } from './cleanStack';
+
+export const discordCodeBlock = (str: string | number): string => {
   return `\`\`\`\n${str}\n\`\`\``;
 };
 
@@ -23,4 +25,25 @@ export const parseTimeFromString = (str: string): number | null => {
   const match = str.match(/(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)([d,h,m,s])/);
   if (match && validTimes[match[2]]) return parseInt(match[1]) * validTimes[match[2]];
   return null;
+};
+
+export const makeErrorEmbed = (err: Error, showStack?: boolean): MessageEmbed => {
+  const embed = new MessageEmbed()
+    .setColor('RED')
+    .setTitle('❌ Internal Error Encountered ❌')
+    .setTimestamp()
+    .setFooter('If this is a consistent error, please contact the staff team');
+
+  if (showStack) {
+    const formatStack = discordCodeBlock(
+      cleanStack(err.stack as string, {
+        pretty: true,
+      })
+    );
+    embed.setDescription(formatStack);
+  } else {
+    embed.setDescription(discordCodeBlock(err.message));
+  }
+
+  return embed;
 };

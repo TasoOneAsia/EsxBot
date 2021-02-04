@@ -8,7 +8,7 @@ import path from 'path';
 export const OWNER_IDS = [
   '188181246600282113',
   '292423857204363265',
-  '662660857960071219',
+  '511108466056626188',
 ];
 
 // Default prefix

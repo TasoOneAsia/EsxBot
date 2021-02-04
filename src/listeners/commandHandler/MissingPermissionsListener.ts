@@ -1,8 +1,7 @@
 import { Command, Listener, ListenerHandler } from 'discord-akairo';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Logger } from 'tslog';
-import { modActionEmbed } from '../../utils/moderationUtils';
-import { discordCodeBlock } from '../../utils/miscUtils';
+import { modActionEmbed, discordCodeBlock } from '../../utils';
 
 export default class MissingPermListener extends Listener {
   private readonly _logger: Logger;

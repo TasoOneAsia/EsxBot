@@ -23,7 +23,7 @@ export default class KickCommand extends Command {
       args: [
         {
           id: 'member',
-          type: 'member',
+          type: 'othermembers',
           prompt: {
             start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
             retry: (msg: Message) =>
@@ -45,9 +45,6 @@ export default class KickCommand extends Command {
   public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
     // TODO: Hierachal permission structure
     const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
-
-    if (member.user === msg.author)
-      return KickCommand._sendErrorMessage(msg, 'You cannot kick yourself');
 
     if (member.roles.highest.position >= msgAuthor.roles.highest.position)
       return KickCommand._sendErrorMessage(

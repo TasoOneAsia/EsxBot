@@ -3,9 +3,13 @@ import { Logger } from 'tslog';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
-import { discordCodeBlock, parseTimeFromString } from '../../utils/miscUtils';
+import {
+  discordCodeBlock,
+  parseTimeFromString,
+  actionMessageEmbed,
+  modActionEmbed,
+} from '../../utils';
 import dayjs from 'dayjs';
-import { actionMessageEmbed, modActionEmbed } from '../../utils/moderationUtils';
 
 interface IBanAction {
   member: GuildMember;
@@ -30,7 +34,7 @@ export default class BanCommand extends Command {
       args: [
         {
           id: 'member',
-          type: 'member',
+          type: 'othermembers',
           prompt: {
             start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
             retry: (msg: Message) =>

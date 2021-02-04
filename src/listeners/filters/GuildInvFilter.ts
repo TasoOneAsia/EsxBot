@@ -1,8 +1,7 @@
 import { Listener, ListenerHandler } from 'discord-akairo';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Logger } from 'tslog';
-import { modActionEmbed } from '../../utils/moderationUtils';
-import { discordCodeBlock } from '../../utils/miscUtils';
+import { modActionEmbed, discordCodeBlock } from '../../utils';
 import { FILTER_WHITELIST_ROLES } from '../../config';
 
 export default class GuildInvInhibitor extends Listener {
