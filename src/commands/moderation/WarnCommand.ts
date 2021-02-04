@@ -76,7 +76,7 @@ export default class WarnCommand extends Command {
 
   private async _sendToModLog(embed: MessageEmbed) {
     if (!process.env.ADMIN_LOG_CHANNEL_ID)
-      throw new Error('LOG_CHANNEL Env variable not defined');
+      throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');
 
     const channel = this.client.channels.cache.get(
       <string>process.env.ADMIN_LOG_CHANNEL_ID
