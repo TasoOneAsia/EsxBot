@@ -7,7 +7,7 @@ const connectManager = new ConnectionManager();
 
 connectManager.create({
   type: 'sqlite',
-  name: 'EsxBot',
+  name: process.env.DB_NAME || 'EsxBot',
   database: path.join(process.cwd(), 'esx.sqlite'),
   entities: [Infracts, GuildSettings],
 });
