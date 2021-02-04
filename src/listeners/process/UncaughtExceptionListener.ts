@@ -5,10 +5,11 @@ export default class UnhandledRejectionListener extends Listener {
   private _logger: Logger;
 
   public constructor(handler: ListenerHandler) {
-    super('unhandledRejection', {
-      event: 'unhandledRejection',
+    super('uncaughtException', {
+      event: 'uncaughtException',
       emitter: 'process',
     });
+
     this._logger = handler.client.log.getChildLogger({
       name: 'UncaughtException',
       prefix: ['[UncaughtException]'],
