@@ -1,9 +1,9 @@
 import { Actions } from './Actions';
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
-import { WarnManager, BanManager } from './managers';
 import { Message } from 'discord.js';
 import * as ArgumentTypes from '../structures/argumentTypes';
 import { Connection } from 'typeorm';
+import { ManagerHandler } from '../structures/managers/ManagerHandler';
 import Database from '../structures/Database';
 import {
   DEFAULT_PREFIX,
@@ -23,10 +23,6 @@ declare module 'discord-akairo' {
     db: Connection;
     commandHandler: CommandHandler;
     listenerHandler: ListenerHandler;
-    managers: {
-      warn: WarnManager;
-      ban: BanManager;
-    };
     _actions: Actions;
   }
 }
@@ -42,6 +38,11 @@ export default class EsxBot extends AkairoClient {
   public listenerHandler: ListenerHandler = new ListenerHandler(this, {
     directory: path.join(__dirname, '..', 'listeners'),
   });
+
+  public managerHandler: ManagerHandler = new ManagerHandler(this, {
+    directory: path.join(__dirname, '.', 'managers'),
+  });
+
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: path.join(__dirname, '..', 'commands'),
     prefix: DEFAULT_PREFIX,
@@ -77,16 +78,12 @@ export default class EsxBot extends AkairoClient {
     await this._init();
     await this.login(process.env.BOT_TOKEN);
 
-    /* Load managers */
-    this.managers = {
-      warn: new WarnManager(),
-      ban: new BanManager(this),
-    };
-
     return null;
   }
 
   private async _init(): Promise<void> {
+    console.log(path.join(__dirname, '.', 'test'));
+    console.log(path.join(__dirname, '..', 'listeners'));
     this.log.debug(`Out Dir: ${LOG_OUTPUT_PATH}`);
 
     this.commandHandler.useListenerHandler(this.listenerHandler);
@@ -122,6 +119,8 @@ export default class EsxBot extends AkairoClient {
     this.commandHandler.loadAll();
     this.log.info('Loading Listener Handler');
     this.listenerHandler.loadAll();
+    this.log.info('Loading Manager Handler');
+    this.managerHandler.loadAll();
     this.log.info('Loading Complete');
 
     this.db = Database.get(process.env.DB_NAME);

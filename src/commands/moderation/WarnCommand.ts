@@ -53,14 +53,7 @@ export default class WarnCommand extends Command {
         Infractions
       );
 
-      await infractionsRepo.insert({
-        user: member.id,
-        guildId: msg.guild.id,
-        staffMember: msg.author.id,
-        reason: reason,
-        infractionType: 'warn',
-      });
-
+      this.client._actions.warn(member, msg.author.id);
       this._logger.debug(`Member Resolved: ${member.id}`);
 
       const modEmbed = modActionEmbed({
