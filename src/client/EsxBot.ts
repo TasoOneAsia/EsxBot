@@ -88,7 +88,10 @@ export default class EsxBot extends AkairoClient {
     });
 
     /* Load managers */
-    this.managers.warn = new WarnManager();
+    this.managers = {
+      warn: new WarnManager(),
+      ban: new BanManager(),
+    };
 
     for (const [name, func] of Object.entries(ArgumentTypes)) {
       this.commandHandler.resolver.addType(name, func.bind(null, this));
