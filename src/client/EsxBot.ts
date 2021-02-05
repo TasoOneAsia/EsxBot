@@ -1,4 +1,5 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
+import { WarnManager, BanManager } from './managers';
 import { Message } from 'discord.js';
 import * as ArgumentTypes from '../structures/argumentTypes';
 import { Connection } from 'typeorm';
@@ -21,6 +22,10 @@ declare module 'discord-akairo' {
     db: Connection;
     commandHandler: CommandHandler;
     listenerHandler: ListenerHandler;
+    managers: {
+      warn: WarnManager;
+      ban: BanManager;
+    };
   }
 }
 
@@ -81,6 +86,9 @@ export default class EsxBot extends AkairoClient {
       listenerHandler: this.listenerHandler,
       process,
     });
+
+    /* Load managers */
+    this.managers.warn = new WarnManager();
 
     for (const [name, func] of Object.entries(ArgumentTypes)) {
       this.commandHandler.resolver.addType(name, func.bind(null, this));
