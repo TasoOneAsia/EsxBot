@@ -42,14 +42,20 @@ export default class WarnCommand extends Command {
       name: 'WarnCommandLogger',
     });
   }
-  public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
+  public async exec(
+    msg: Message,
+    { member, reason }: IModActionArgs
+  ): Promise<Message | null> {
     try {
+      if (!msg.guild) return null;
+
       const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
         Infractions
       );
 
       await infractionsRepo.insert({
         user: member.id,
+        guildId: msg.guild.id,
         staffMember: msg.author.id,
         reason: reason,
         infractionType: 'warn',

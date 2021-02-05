@@ -63,8 +63,10 @@ export default class BanCommand extends Command {
   public async exec(
     msg: Message,
     { member, duration, reason }: IBanAction
-  ): Promise<Message> {
+  ): Promise<Message | null> {
     try {
+      if (!msg.guild) return null;
+
       const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
         Infractions
       );
@@ -78,6 +80,7 @@ export default class BanCommand extends Command {
 
       await infractionsRepo.insert({
         user: member.id,
+        guildId: msg.guild.id,
         staffMember: msg.author.id,
         reason,
         unbanDate: unbanDate ? unbanDate.unix() : 0,

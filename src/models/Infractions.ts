@@ -9,6 +9,12 @@ export default class Infractions {
 
   @Column({
     type: 'varchar',
+    length: 64,
+  })
+  guildId!: string;
+
+  @Column({
+    type: 'varchar',
     length: 10,
   })
   infractionType!: string;

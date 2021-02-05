@@ -42,8 +42,13 @@ export default class KickCommand extends Command {
     });
   }
 
-  public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
+  public async exec(
+    msg: Message,
+    { member, reason }: IModActionArgs
+  ): Promise<Message | null> {
     // TODO: Hierachal permission structure
+    if (!msg.guild) return null;
+
     const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
 
     if (member.roles.highest.position >= msgAuthor.roles.highest.position)
@@ -59,6 +64,7 @@ export default class KickCommand extends Command {
 
       await infractionsRepo.insert({
         user: member.id,
+        guildId: msg.guild.id,
         staffMember: msg.author.id,
         reason: reason,
         infractionType: 'kick',
