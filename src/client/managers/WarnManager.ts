@@ -1,6 +1,6 @@
 import { GuildMember } from 'discord.js';
 export class WarnManager {
-  public async add(member: GuildMember, reason?: string) {
+  public async add(member: GuildMember, reason?: string): Promise<void> {
     reason = reason || 'No reason specified';
     /* Add warning in sqlite */
   }

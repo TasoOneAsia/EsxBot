@@ -1,3 +1,4 @@
+import { Actions } from './Actions';
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { WarnManager, BanManager } from './managers';
 import { Message } from 'discord.js';
@@ -26,6 +27,7 @@ declare module 'discord-akairo' {
       warn: WarnManager;
       ban: BanManager;
     };
+    _actions: Actions;
   }
 }
 
@@ -70,10 +72,18 @@ export default class EsxBot extends AkairoClient {
     });
   }
 
-  public async start(): Promise<string> {
+  public async start(): Promise<null> {
     this.log.info('Starting Initialization Sequence');
     await this._init();
-    return this.login(process.env.BOT_TOKEN);
+    await this.login(process.env.BOT_TOKEN);
+
+    /* Load managers */
+    this.managers = {
+      warn: new WarnManager(),
+      ban: new BanManager(this),
+    };
+
+    return null;
   }
 
   private async _init(): Promise<void> {
@@ -87,11 +97,7 @@ export default class EsxBot extends AkairoClient {
       process,
     });
 
-    /* Load managers */
-    this.managers = {
-      warn: new WarnManager(),
-      ban: new BanManager(),
-    };
+    this._actions = new Actions(this);
 
     for (const [name, func] of Object.entries(ArgumentTypes)) {
       this.commandHandler.resolver.addType(name, func.bind(null, this));

@@ -78,14 +78,7 @@ export default class BanCommand extends Command {
       const unbanDate =
         duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
 
-      await infractionsRepo.insert({
-        user: member.id,
-        guildId: msg.guild.id,
-        staffMember: msg.author.id,
-        reason,
-        unbanDate: unbanDate ? unbanDate.unix() : 0,
-        infractionType: 'ban',
-      });
+      this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
 
       const [dmEmbed, logEmbed] = this._buildEmbeds(
         msg,
@@ -101,11 +94,6 @@ export default class BanCommand extends Command {
       }
 
       await this._sendToModLog(logEmbed);
-
-      await member.ban({
-        days: 1,
-        reason,
-      });
 
       const liftMessage = unbanDate
         ? `be lifted on ${unbanDate.format('MM/DD/YY')}`

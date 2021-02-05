@@ -8,6 +8,7 @@ export const duration = (EsxBot: EsxBot, message: Message, phrase: string): any 
 
   const duration = parseTimeFromString(phrase);
   if (duration !== null && duration <= 0) return null; // Prevent permanent bans as 0d could return 0 and cause a permanent ban if there we're no proper checks! Also stops time machines
+  if (duration !== null && duration > 5000000000) return 'perma'; // Year 2128
 
   return duration;
 };
