@@ -3,8 +3,6 @@ import { GuildMember } from 'discord.js';
 import { Repository } from 'typeorm';
 import { setTimeout as setLongTimeout } from 'long-timeout'; // We have to use a retarded module because setTimeout has a maximum value of a 32bit signed integer
 import Infractions from '../../models/Infractions';
-import EsxBot from '../EsxBot';
-
 export default class BanManager extends Manager {
   private infractionsRepo!: Repository<Infractions>;
 
@@ -14,7 +12,7 @@ export default class BanManager extends Manager {
     });
   }
 
-  public exec() {
+  public exec(): void {
     this.infractionsRepo = this.client.db.getRepository(Infractions);
 
     this.infractionsRepo.find({ infractionType: 'ban' }).then((allBans) => {

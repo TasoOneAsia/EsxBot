@@ -49,7 +49,7 @@ export default class KickCommand extends Command {
     // TODO: Hierachal permission structure
     if (!msg.guild) return null;
 
-    const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
+    const msgAuthor = await msg.guild.members.fetch(msg.author.id);
 
     if (member.roles.highest.position >= msgAuthor.roles.highest.position)
       return KickCommand._sendErrorMessage(

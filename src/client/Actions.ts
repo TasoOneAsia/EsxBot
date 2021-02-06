@@ -41,7 +41,7 @@ export class Actions {
   }
 
   /* TODO: We should propably move all mod & dm logs in a manager */
-  public async sendToModLog(embed: MessageEmbed) {
+  public async sendToModLog(embed: MessageEmbed): Promise<void> {
     if (!process.env.ADMIN_LOG_CHANNEL_ID)
       throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');
 

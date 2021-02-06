@@ -1,5 +1,5 @@
 import { Command, CommandHandler } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 import { Logger } from 'tslog';
 import { modActionEmbed } from '../../utils/moderationUtils';
 import { IModActionArgs } from '../../types';

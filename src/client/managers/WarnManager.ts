@@ -21,7 +21,7 @@ export default class WarnManager extends Manager {
     });
   }
 
-  public exec() {
+  public exec(): void {
     this.infractionsRepo = this.client.db.getRepository(Infractions);
   }
 }

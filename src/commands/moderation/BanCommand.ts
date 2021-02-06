@@ -1,8 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
-import { Repository } from 'typeorm';
-import Infractions from '../../models/Infractions';
+import { GuildMember, Message, MessageEmbed } from 'discord.js';
 import { discordCodeBlock, actionMessageEmbed, modActionEmbed } from '../../utils';
 import dayjs from 'dayjs';
 
@@ -66,10 +64,6 @@ export default class BanCommand extends Command {
   ): Promise<Message | null> {
     try {
       if (!msg.guild) return null;
-
-      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-        Infractions
-      );
 
       msg.delete({ timeout: 3000 });
 

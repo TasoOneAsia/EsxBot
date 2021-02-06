@@ -22,13 +22,14 @@ export default class MissingPermListener extends Listener {
     cmd: Command,
     type: string,
     perm: unknown
-  ): Promise<Message> {
+  ): Promise<Message | null> {
     this._logger.debug(`Missing permission event fired by ${msg.author} for ${perm}`);
+    if (!msg.guild) return null;
 
     const embed = modActionEmbed({
       action: 'Failed Permissions',
       logger: this._logger,
-      member: <GuildMember>msg.guild!.member(msg.author),
+      member: <GuildMember>msg.guild.member(msg.author),
       fields: [
         {
           name: 'Command',

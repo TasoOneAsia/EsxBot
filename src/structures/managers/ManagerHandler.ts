@@ -38,7 +38,7 @@ export class ManagerHandler extends AkairoHandler {
     });
   }
 
-  register(manager: Manager, filepath: string) {
+  register(manager: Manager, filepath: string): Manager {
     super.register(manager, filepath);
     manager.exec = manager.exec.bind(manager);
     return manager;

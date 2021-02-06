@@ -9,7 +9,7 @@ export class Manager extends AkairoModule {
     super(id, { category });
   }
 
-  public exec() {
+  public exec(): void {
     this.client.log.error('EXEC NOT IMPLEMENTED IN MANAGER');
   }
 }

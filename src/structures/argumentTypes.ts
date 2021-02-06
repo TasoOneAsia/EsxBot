@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { Message } from 'discord.js';
 import { parseTimeFromString } from '../utils';
 import EsxBot from '../client/EsxBot';
