@@ -1,16 +1,22 @@
-import { GuildMember } from 'discord.js';
+import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import EsxBot from './EsxBot';
 import { BanManager, WarnManager } from './managers';
+import { Logger } from 'tslog';
 
 export class Actions {
-  private EsxBot: EsxBot;
+  private client: EsxBot;
+  private readonly _logger: Logger;
 
   constructor(EsxBot: EsxBot) {
-    this.EsxBot = EsxBot;
+    this.client = EsxBot;
+
+    this._logger = this.client.log.getChildLogger({
+      name: 'ActionsLogger',
+    });
   }
 
   public async warn(member: GuildMember, staff: string, reason?: string): Promise<void> {
-    (<WarnManager>this.EsxBot.managerHandler.modules.get('warn')).add(
+    (<WarnManager>this.client.managerHandler.modules.get('warn')).add(
       member,
       staff,
       reason
@@ -24,7 +30,7 @@ export class Actions {
     staff?: string,
     reason?: string
   ): Promise<void> {
-    (<BanManager>this.EsxBot.managerHandler.modules.get('ban')).add(
+    (<BanManager>this.client.managerHandler.modules.get('ban')).add(
       member,
       duration,
       staff,
@@ -32,5 +38,19 @@ export class Actions {
     );
     //this.EsxBot.managers.ban.add(member, duration, staff, reason);
     /* Possibly do more things on ban, log, etc.. */
+  }
+
+  public async sendToModLog(embed: MessageEmbed) {
+    if (!process.env.ADMIN_LOG_CHANNEL_ID)
+      throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');
+
+    const channel = this.client.channels.cache.get(
+      <string>process.env.ADMIN_LOG_CHANNEL_ID
+    ) as TextChannel;
+    try {
+      await channel.send(embed);
+    } catch (e) {
+      this._logger.error(e);
+    }
   }
 }

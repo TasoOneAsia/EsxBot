@@ -47,6 +47,7 @@ export default class GuildInvInhibitor extends Listener {
             },
           ],
         });
+        this.client._actions.warn(member, '0', 'Posting discord invites into a guild');
         await this._sendToModLog(embed);
       }
     }

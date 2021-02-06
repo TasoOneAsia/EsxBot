@@ -93,7 +93,7 @@ export default class BanCommand extends Command {
         this._logger.error(`Unable to send direct message to ${member.user.username}`);
       }
 
-      await this._sendToModLog(logEmbed);
+      await this.client._actions.sendToModLog(logEmbed);
 
       const liftMessage = unbanDate
         ? `be lifted on ${unbanDate.format('MM/DD/YY')}`
@@ -104,20 +104,6 @@ export default class BanCommand extends Command {
     } catch (e) {
       this._logger.error(e);
       return msg.channel.send('An internal error occured');
-    }
-  }
-
-  private async _sendToModLog(embed: MessageEmbed) {
-    if (!process.env.ADMIN_LOG_CHANNEL_ID)
-      throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');
-
-    const channel = this.client.channels.cache.get(
-      <string>process.env.ADMIN_LOG_CHANNEL_ID
-    ) as TextChannel;
-    try {
-      await channel.send(embed);
-    } catch (e) {
-      this._logger.error(e);
     }
   }
 
