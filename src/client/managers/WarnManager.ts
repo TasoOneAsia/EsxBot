@@ -6,7 +6,6 @@ export default class WarnManager extends Manager {
   private infractionsRepo!: Repository<Infractions>;
 
   constructor() {
-    console.log('POGG');
     super('warn', {
       category: 'moderation',
     });

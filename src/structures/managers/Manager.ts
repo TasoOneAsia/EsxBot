@@ -1,4 +1,4 @@
-import { AkairoModule, AkairoError } from 'discord-akairo';
+import { AkairoModule } from 'discord-akairo';
 
 interface IManagerOptions {
   category: string;

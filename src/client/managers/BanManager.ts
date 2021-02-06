@@ -1,6 +1,5 @@
 import { Manager } from './../../structures/managers/Manager';
 import { GuildMember } from 'discord.js';
-import { AkairoHandler } from 'discord-akairo';
 import { Repository } from 'typeorm';
 import { setTimeout as setLongTimeout } from 'long-timeout'; // We have to use a retarded module because setTimeout has a maximum value of a 32bit signed integer
 import Infractions from '../../models/Infractions';

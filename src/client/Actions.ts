@@ -40,6 +40,7 @@ export class Actions {
     /* Possibly do more things on ban, log, etc.. */
   }
 
+  /* TODO: We should propably move all mod & dm logs in a manager */
   public async sendToModLog(embed: MessageEmbed) {
     if (!process.env.ADMIN_LOG_CHANNEL_ID)
       throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');

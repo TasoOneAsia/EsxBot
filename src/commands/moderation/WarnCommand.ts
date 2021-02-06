@@ -1,8 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
-import { Repository } from 'typeorm';
 import { modActionEmbed } from '../../utils/moderationUtils';
 import { IModActionArgs } from '../../types';
 
@@ -48,10 +46,6 @@ export default class WarnCommand extends Command {
   ): Promise<Message | null> {
     try {
       if (!msg.guild) return null;
-
-      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-        Infractions
-      );
 
       this.client._actions.warn(member, msg.author.id);
       this._logger.debug(`Member Resolved: ${member.id}`);
