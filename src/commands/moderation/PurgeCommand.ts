@@ -67,9 +67,7 @@ export default class PurgeCommand extends Command {
         await (msg.channel as TextChannel).bulkDelete(filteredMsgs);
         // No member arg
       } else {
-        const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
-        const filteredMsg = fetchedMsg.array().slice(0, amount);
-        await (msg.channel as TextChannel).bulkDelete(filteredMsg);
+        await (msg.channel as TextChannel).bulkDelete(amount);
       }
     } catch (e) {
       this._logger.error(e);
