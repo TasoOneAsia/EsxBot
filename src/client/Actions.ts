@@ -16,7 +16,7 @@ export class Actions {
   }
 
   public async warn(member: GuildMember, staff: string, reason?: string): Promise<void> {
-    (<WarnManager>this.client.managerHandler.modules.get('warn')).add(
+    await (<WarnManager>this.client.managerHandler.modules.get('warn')).add(
       member,
       staff,
       reason
@@ -30,7 +30,7 @@ export class Actions {
     staff?: string,
     reason?: string
   ): Promise<void> {
-    (<BanManager>this.client.managerHandler.modules.get('ban')).add(
+    await (<BanManager>this.client.managerHandler.modules.get('ban')).add(
       member,
       duration,
       staff,
