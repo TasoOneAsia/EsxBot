@@ -61,54 +61,51 @@ export default class KickCommand extends Command {
         'This was not allowed due to role hierachy'
       );
 
+    const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
+      Infractions
+    );
+
+    await infractionsRepo.insert({
+      user: member.id,
+      guildId: msg.guild.id,
+      staffMember: msg.author.id,
+      reason: reason,
+      infractionType: 'kick',
+    });
+
+    this._logger.debug(`Member resolved: ${member.id}`);
+
+    const modEmbed = modActionEmbed({
+      member: member,
+      staffMember: msg.author,
+      action: 'kick',
+      reason,
+      logger: this._logger,
+    });
+
+    await this.client._actions.sendToModLog(modEmbed);
+
+    const dmEmbed = actionMessageEmbed({
+      action: 'kick',
+      reason,
+      logger: this._logger,
+      member: member,
+      staffMember: msg.author,
+    });
+
     try {
-      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-        Infractions
-      );
-
-      await infractionsRepo.insert({
-        user: member.id,
-        guildId: msg.guild.id,
-        staffMember: msg.author.id,
-        reason: reason,
-        infractionType: 'kick',
-      });
-
-      this._logger.debug(`Member resolved: ${member.id}`);
-
-      const modEmbed = modActionEmbed({
-        member: member,
-        staffMember: msg.author,
-        action: 'kick',
-        reason,
-        logger: this._logger,
-      });
-
-      await this.client._actions.sendToModLog(modEmbed);
-
-      const dmEmbed = actionMessageEmbed({
-        action: 'kick',
-        reason,
-        logger: this._logger,
-        member: member,
-        staffMember: msg.author,
-      });
-
-      try {
-        // Send DM before kick
-        await member.send(dmEmbed);
-        await member.kick(reason);
-      } catch (e) {
-        this._logger.error(
-          `Could not send direct message to ${member.user.tag} or could not kick`
-        );
-      }
-
-      return msg.channel.send(`**${member.user.tag}** was kicked for \`${reason}\``);
+      // Send DM before kick
+      await member.send(dmEmbed);
+      await member.kick(reason);
     } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('**An internal error occurred**');
+      this._logger.error(
+        `Could not send direct message to ${member.user.tag} or could not kick`
+      );
     }
+
+    return msg.channel.send(
+      makeSimpleEmbed(`**${member.user.tag}** was kicked for \`${reason}\``)
+    );
   }
 
   private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
