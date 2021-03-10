@@ -17,9 +17,11 @@ export default class ErrorEventListener extends Listener {
     });
   }
 
-  public async exec(e: Error): Promise<void> {
+  public async exec(e: Error, msg: Message): Promise<Message> {
     await this._sendErrorToLog(e);
-    // this._logger.error(e);
+    this._logger.error(e);
+    const embed = makeErrorEmbed(e);
+    return await msg.channel.send(embed);
   }
 
   private async _sendErrorToLog(e: Error): Promise<Message> {
