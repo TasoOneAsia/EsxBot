@@ -25,14 +25,10 @@ export default class Infractions {
   })
   infractionType!: string;
 
-  @Column({
-    nullable: false,
-  })
+  @Column()
   user!: string;
 
-  @Column({
-    nullable: false,
-  })
+  @Column()
   staffMember!: string;
 
   @Column({
@@ -42,7 +38,9 @@ export default class Infractions {
   })
   reason!: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   unbanDate!: number;
 
   @CreateDateColumn()
