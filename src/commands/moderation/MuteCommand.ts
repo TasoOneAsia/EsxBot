@@ -72,7 +72,7 @@ export default class MuteCommand extends Command {
     this._logger.debug(`Added mute infraction for ${member.id}`);
 
     const dmEmbed = actionMessageEmbed({
-      action: 'warn',
+      action: 'mute',
       reason,
       logger: this._logger,
       member: member,
