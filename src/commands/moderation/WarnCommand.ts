@@ -76,7 +76,7 @@ export default class WarnCommand extends Command {
     await this.client._actions.sendToModLog(modEmbed);
     msg.delete({ timeout: 3000 });
     return msg.channel.send(
-      makeSimpleEmbed(`${member}, **has been warned.** (Reason: \`${reason}\``)
+      makeSimpleEmbed(`${member}, **has been warned.** (Reason: \`${reason}\`)`)
     );
   }
 
