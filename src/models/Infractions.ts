@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export default class Infractions {
@@ -8,20 +14,17 @@ export default class Infractions {
   infractionID!: number;
 
   @Column({
-    type: 'varchar',
-    length: 10,
+    nullable: false,
   })
   infractionType!: string;
 
   @Column({
-    type: 'varchar',
-    length: 64,
+    nullable: false,
   })
   user!: string;
 
   @Column({
-    type: 'varchar',
-    length: 64,
+    nullable: false,
   })
   staffMember!: string;
 
@@ -31,11 +34,13 @@ export default class Infractions {
     default: 'No reason provided',
   })
   reason!: string;
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+
+  @Column()
   unbanDate!: number;
 
-  perma!: boolean;
+  @CreateDateColumn()
+  createdDate!: Date;
+
+  @UpdateDateColumn()
+  updatedDate!: Date;
 }
