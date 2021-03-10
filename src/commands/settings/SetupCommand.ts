@@ -38,20 +38,15 @@ export default class SetupCommand extends Command {
   }
 
   public async exec(msg: Message, { type }: { type: string }): Promise<void | Message> {
-    try {
-      switch (type) {
-        case 'role':
-          await SetupCommand._setupRole(msg);
-          break;
-        case 'rules':
-          await SetupCommand._setupRules(msg);
-          break;
-      }
-      msg.delete({ timeout: 3000 });
-    } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('Internal Error Occured');
+    switch (type) {
+      case 'role':
+        await SetupCommand._setupRole(msg);
+        break;
+      case 'rules':
+        await SetupCommand._setupRules(msg);
+        break;
     }
+    msg.delete({ timeout: 3000 });
   }
 
   private static async _setupRules(msg: Message): Promise<Message> {
