@@ -29,7 +29,7 @@ export default class BanCommand extends Command {
       args: [
         {
           id: 'member',
-          type: 'othermembers',
+          type: 'member',
           prompt: {
             start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
             retry: (msg: Message) =>
