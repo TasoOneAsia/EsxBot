@@ -19,7 +19,9 @@ export default class BanManager extends Manager {
       allBans
         .filter((ban) => ban.unbanDate && ban.unbanDate * 1000 <= Date.now())
         .forEach((expiredBan) => {
-          this.delete(expiredBan);
+          this.delete(expiredBan).catch(() => {
+            /*NOOP*/
+          });
         });
 
       allBans = allBans.filter(
@@ -28,7 +30,9 @@ export default class BanManager extends Manager {
 
       allBans.forEach((ban) => {
         setLongTimeout(() => {
-          this.delete(ban);
+          this.delete(ban).catch(() => {
+            /*NOOP*/
+          });
         }, ban.unbanDate * 1000 - Date.now());
       });
     });
