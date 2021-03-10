@@ -18,6 +18,7 @@ export default class HelpCommand extends Command {
           default: null,
         },
       ],
+      userPermissions: 'KICK_MEMBERS',
     });
   }
 
@@ -67,6 +68,10 @@ export default class HelpCommand extends Command {
 
     for (const category of this.handler.categories.values()) {
       if (['default'].includes(category.id)) continue;
+
+      // Don't show debug category for clients
+      if (category.id === 'Debug' && !this.client.ownerID.includes(message.author.id))
+        continue;
 
       embed.addField(
         category.id,
