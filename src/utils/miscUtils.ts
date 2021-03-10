@@ -1,5 +1,5 @@
 // FIXME: Types suck here, will improve after functionality
-import { MessageEmbed } from 'discord.js';
+import { ColorResolvable, MessageEmbed } from 'discord.js';
 import { cleanStack } from './cleanStack';
 
 export const discordCodeBlock = (str: string | number): string => {
@@ -18,6 +18,13 @@ export const msToFormatted = (ms: number): string => {
   const s = Math.floor(ms / 1000) % 60;
 
   return `${d}d ${h}h ${m}m ${s}s`;
+};
+
+export const makeSimpleEmbed = (
+  msg: string,
+  color: ColorResolvable = 'RANDOM'
+): MessageEmbed => {
+  return new MessageEmbed().setTimestamp().setDescription(msg).setColor(color);
 };
 
 export const parseTimeFromString = (str: string): number | null => {
