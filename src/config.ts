@@ -11,6 +11,12 @@ export const OWNER_IDS = [
   '511108466056626188',
 ];
 
+export const IGNORED_CHANNELS = [
+  '733029369324240987',
+  '530362608394567680',
+  '702452622371848213',
+];
+
 // Default prefix
 export const DEFAULT_PREFIX = '!';
 

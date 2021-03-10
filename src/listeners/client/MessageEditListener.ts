@@ -2,6 +2,7 @@ import { Listener, ListenerHandler } from 'discord-akairo';
 import { Message, TextChannel, MessageEmbed } from 'discord.js';
 import { Logger } from 'tslog';
 import { discordCodeBlock } from '../../utils/miscUtils';
+import { IGNORED_CHANNELS } from '../../config';
 
 export default class MessageDeleteListener extends Listener {
   private _logger: Logger;
@@ -20,6 +21,10 @@ export default class MessageDeleteListener extends Listener {
   public async exec(oldMsg: Message, newMsg: Message): Promise<Message | void> {
     if (newMsg.partial || newMsg.author.bot || newMsg.author.id === this.client.user?.id)
       return;
+
+    for (const channel of IGNORED_CHANNELS) {
+      if (channel === oldMsg.channel.id) return;
+    }
 
     this._logger.info(
       `Edit Event: ${oldMsg.author.tag} (${oldMsg.author.id}), Original: ${oldMsg.content}, New: ${newMsg.content}, Channel: ${oldMsg.channel}`
