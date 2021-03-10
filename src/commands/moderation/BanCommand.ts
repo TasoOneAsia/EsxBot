@@ -68,7 +68,7 @@ export default class BanCommand extends Command {
   public async exec(
     msg: Message,
     { member, duration, reason }: IBanAction
-  ): Promise<Message> {
+  ): Promise<Message | null> {
     try {
       const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
 
@@ -84,54 +84,18 @@ export default class BanCommand extends Command {
 
       msg.delete({ timeout: 3000 });
 
-      if (duration === 'perma') {
-        await infractionsRepo.insert({
-          user: member.id,
-          staffMember: msg.author.id,
-          reason,
-          unbanDate: 0,
-          infractionType: 'ban',
-        });
-
-        const [dmEmbed, logEmbed] = this._buildEmbeds(
-          msg,
-          member,
-          reason,
-          'Permanently Banned'
-        );
-
-        try {
-          member.send(dmEmbed);
-        } catch (e) {
-          this._logger.error(`Unable to send DM to ${member.user.username}`);
-        }
-        await this._sendToModLog(logEmbed);
-
-        await member.ban({
-          days: 1,
-          reason,
-        });
-
-        return msg.channel.send(`**${member.user.tag}** was banned for **${reason}**`);
-      }
-
       if (!duration) return msg.reply('Incorrect date format');
 
-      const unbanDate = dayjs().add(duration as number, 'ms');
+      const unbanDate =
+        duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
 
-      await infractionsRepo.insert({
-        user: member.id,
-        staffMember: msg.author.id,
-        reason,
-        unbanDate: unbanDate.unix(),
-        infractionType: 'ban',
-      });
+      this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
 
       const [dmEmbed, logEmbed] = this._buildEmbeds(
         msg,
         member,
         reason,
-        unbanDate.format('MM/DD/YY')
+        unbanDate ? unbanDate.format('MM/DD/YY') : 'Permanently Banned'
       );
 
       try {
@@ -140,14 +104,14 @@ export default class BanCommand extends Command {
         this._logger.error(`Unable to send direct message to ${member.user.username}`);
       }
 
-      await this._sendToModLog(logEmbed);
+      await this.client._actions.sendToModLog(logEmbed);
 
-      await member.ban({
-        days: 1,
-        reason,
-      });
-
-      return msg.channel.send(unbanDate.format('MM/DD/YY') || 'Perma');
+      const liftMessage = unbanDate
+        ? `be lifted on ${unbanDate.format('MM/DD/YY')}`
+        : 'never be lifted';
+      return msg.channel.send(
+        `**${member.user.tag}** was banned for **${reason}**. The ban will ${liftMessage}`
+      );
     } catch (e) {
       this._logger.error(e);
       return msg.channel.send('An internal error occured');

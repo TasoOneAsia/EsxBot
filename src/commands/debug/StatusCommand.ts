@@ -27,26 +27,27 @@ export default class StatusCommand extends Command {
 
   public async exec(msg: Message): Promise<Message | void> {
     const embed = await StatusCommand._createStatsEmbed(msg, <number>this.client.uptime);
-    return msg.channel.send(embed);
+    return msg.channel.send(embed || 'An internal error has occured!');
   }
 
   private static async _createStatsEmbed(
     msg: Message,
     uptime: number
-  ): Promise<MessageEmbed> {
+  ): Promise<MessageEmbed | null> {
     const sysMem = await sysInfo.mem();
+    if (!msg.guild) return null;
     return (
       new MessageEmbed()
         .setTitle('ESX Guild & Bot Stats')
         .setColor('#00c400')
-        .setImage(<string>msg.guild?.iconURL())
+        .setImage(<string>msg.guild.iconURL())
         .setTimestamp()
         .setFooter(msg.author.tag, msg.author.displayAvatarURL())
         // TODO: Reduce reundant code
         .addFields([
           {
             name: 'Guild Members',
-            value: discordCodeBlock(msg.guild!.memberCount),
+            value: discordCodeBlock(msg.guild.memberCount),
             inline: true,
           },
           {

@@ -19,9 +19,9 @@ export default class GuildInvInhibitor extends Listener {
   }
 
   public async exec(msg: Message): Promise<void> {
-    if (this._isBlacklisted(msg.content)) {
+    if (this._isBlacklisted(msg.content) && msg.guild) {
       // TODO: Add auto warning
-      const member = msg.guild!.member(msg.author);
+      const member = msg.guild.member(msg.author);
       // Exit if whitelisted
       for (const role of FILTER_WHITELIST_ROLES) {
         if (member?.roles.cache.has(role)) return;

@@ -14,7 +14,14 @@ export default class Infractions {
   infractionID!: number;
 
   @Column({
-    nullable: false,
+    type: 'varchar',
+    length: 64,
+  })
+  guildId!: string;
+
+  @Column({
+    type: 'varchar',
+    length: 10,
   })
   infractionType!: string;
 

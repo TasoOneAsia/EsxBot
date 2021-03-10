@@ -22,10 +22,11 @@ export default class GuildInvInhibitor extends Listener {
     if (
       /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g.test(
         msg.content
-      )
+      ) &&
+      msg.guild
     ) {
       // TODO: Add auto warning
-      const member = msg.guild!.member(msg.author);
+      const member = msg.guild.member(msg.author);
       // Exit if whitelisted
       for (const role of FILTER_WHITELIST_ROLES) {
         if (member?.roles.cache.has(role)) return;
@@ -47,6 +48,7 @@ export default class GuildInvInhibitor extends Listener {
             },
           ],
         });
+        this.client._actions.warn(member, '0', 'Posting discord invites into a guild');
         await this._sendToModLog(embed);
       }
     }

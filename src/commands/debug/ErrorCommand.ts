@@ -15,7 +15,7 @@ export default class StatusCommand extends Command {
     });
   }
 
-  public exec(msg: Message): void {
+  public exec(): void {
     throw new Error('Yes hello i am error');
   }
 }

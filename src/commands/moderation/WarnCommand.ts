@@ -1,6 +1,5 @@
 import { Command, CommandHandler } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import Infractions from '../../models/Infractions';
+import { Message } from 'discord.js';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
 import { makeSimpleEmbed, modActionEmbed } from '../../utils';

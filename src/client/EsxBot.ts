@@ -1,3 +1,4 @@
+import { Actions } from './Actions';
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Message, MessageEmbed, MessageOptions } from 'discord.js';
 import * as ArgumentTypes from '../structures/argumentTypes';
@@ -22,6 +23,7 @@ declare module 'discord-akairo' {
     db: Connection;
     commandHandler: CommandHandler;
     listenerHandler: ListenerHandler;
+    _actions: Actions;
   }
 }
 
@@ -36,6 +38,11 @@ export default class EsxBot extends AkairoClient {
   public listenerHandler: ListenerHandler = new ListenerHandler(this, {
     directory: path.join(__dirname, '..', 'listeners'),
   });
+
+  public managerHandler: ManagerHandler = new ManagerHandler(this, {
+    directory: path.join(__dirname, '.', 'managers'),
+  });
+
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: path.join(__dirname, '..', 'commands'),
     prefix: DEFAULT_PREFIX,
@@ -88,10 +95,12 @@ export default class EsxBot extends AkairoClient {
     });
   }
 
-  public async start(): Promise<string> {
+  public async start(): Promise<null> {
     this.log.info('Starting Initialization Sequence');
     await this._init();
-    return this.login(process.env.BOT_TOKEN);
+    await this.login(process.env.BOT_TOKEN);
+
+    return null;
   }
 
   private async _init(): Promise<void> {
@@ -102,6 +111,8 @@ export default class EsxBot extends AkairoClient {
       listenerHandler: this.listenerHandler,
       process,
     });
+
+    this._actions = new Actions(this);
 
     for (const [name, func] of Object.entries(ArgumentTypes)) {
       this.commandHandler.resolver.addType(name, func.bind(null, this));
@@ -126,6 +137,8 @@ export default class EsxBot extends AkairoClient {
     this.commandHandler.loadAll();
     this.log.info('Loading Listener Handler');
     this.listenerHandler.loadAll();
+    this.log.info('Loading Manager Handler');
+    this.managerHandler.loadAll();
     this.log.info('Loading Complete');
 
     this.db = Database.get(connectionName);

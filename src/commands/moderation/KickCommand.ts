@@ -1,5 +1,5 @@
 import { Command, CommandHandler } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 import { Logger } from 'tslog';
 import { IModActionArgs } from '../../types';
 import { Repository } from 'typeorm';
@@ -43,9 +43,12 @@ export default class KickCommand extends Command {
     });
   }
 
-  public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
+  public async exec(
+    msg: Message,
+    { member, reason }: IModActionArgs
+  ): Promise<Message | null> {
     // TODO: Hierachal permission structure
-    const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
+    if (!msg.guild) return null;
 
     if (msg.author.id === member.id)
       return KickCommand._sendErrorMessage(msg, 'Cannot kick yourself');
@@ -63,6 +66,7 @@ export default class KickCommand extends Command {
 
       await infractionsRepo.insert({
         user: member.id,
+        guildId: msg.guild.id,
         staffMember: msg.author.id,
         reason: reason,
         infractionType: 'kick',
@@ -78,7 +82,7 @@ export default class KickCommand extends Command {
         logger: this._logger,
       });
 
-      await this._sendToModLog(modEmbed);
+      await this.client._actions.sendToModLog(modEmbed);
 
       const dmEmbed = actionMessageEmbed({
         action: 'kick',

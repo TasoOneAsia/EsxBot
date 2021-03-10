@@ -6,6 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
+    "@types/long-timeout": "^0.1.0",
     "@types/node": "^14.14.20",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
@@ -33,6 +34,7 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "escape-string-regexp": "^4.0.0",
+    "long-timeout": "^0.1.1",
     "pg": "^8.5.1",
     "sqlite3": "^5.0.1",
     "systeminformation": "^4.34.5",
