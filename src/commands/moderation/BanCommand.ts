@@ -78,10 +78,6 @@ export default class BanCommand extends Command {
       if (member.roles.highest.position >= msgAuthor.roles.highest.position)
         return BanCommand._sendErrorMessage(msg, 'Not allowed due to role hierachy');
 
-      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-        Infractions
-      );
-
       msg.delete({ timeout: 3000 });
 
       if (!duration) return msg.reply('Incorrect date format');
@@ -89,7 +85,7 @@ export default class BanCommand extends Command {
       const unbanDate =
         duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
 
-      this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
+      await this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
 
       const [dmEmbed, logEmbed] = this._buildEmbeds(
         msg,
