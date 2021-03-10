@@ -5,6 +5,7 @@ import { IModActionArgs } from '../../types';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { actionMessageEmbed, modActionEmbed } from '../../utils/moderationUtils';
+import { makeSimpleEmbed } from '../../utils';
 
 export default class KickCommand extends Command {
   private readonly _logger: Logger;
@@ -45,6 +46,9 @@ export default class KickCommand extends Command {
   public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
     // TODO: Hierachal permission structure
     const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
+
+    if (msg.author.id === member.id)
+      return KickCommand._sendErrorMessage(msg, 'Cannot kick yourself');
 
     if (member.roles.highest.position >= msgAuthor.roles.highest.position)
       return KickCommand._sendErrorMessage(
@@ -115,7 +119,7 @@ export default class KickCommand extends Command {
     }
   }
 
-  private static async _sendErrorMessage(msg: Message, reason: string): Promise<Message> {
-    return msg.channel.send(`**Error:** \`${reason}\``);
+  private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
+    return await msg.channel.send(makeSimpleEmbed(`**Error**: ${e}`, 'RED'));
   }
 }

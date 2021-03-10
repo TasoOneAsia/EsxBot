@@ -3,7 +3,7 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import Infractions from '../../models/Infractions';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
-import { modActionEmbed } from '../../utils/moderationUtils';
+import { makeSimpleEmbed, modActionEmbed } from '../../utils';
 import { IModActionArgs } from '../../types';
 
 export default class WarnCommand extends Command {
@@ -43,35 +43,42 @@ export default class WarnCommand extends Command {
     });
   }
   public async exec(msg: Message, { member, reason }: IModActionArgs): Promise<Message> {
-    try {
-      const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-        Infractions
+    const msgAuthor = await msg.guild!.members.fetch(msg.author);
+
+    if (member.roles.highest.position >= msgAuthor.roles.highest.position)
+      return WarnCommand._sendErrorMessage(
+        msg,
+        'This was not allowed due to role hierachy'
       );
 
-      await infractionsRepo.insert({
-        user: member.id,
-        staffMember: msg.author.id,
-        reason: reason,
-        infractionType: 'warn',
-      });
+    const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
+      Infractions
+    );
 
-      this._logger.debug(`Member Resolved: ${member.id}`);
+    await infractionsRepo.insert({
+      user: member.id,
+      staffMember: msg.author.id,
+      reason: reason,
+      infractionType: 'warn',
+    });
 
-      const modEmbed = modActionEmbed({
-        member: member,
-        staffMember: msg.author,
-        action: 'warn',
-        reason,
-        logger: this._logger,
-      });
+    this._logger.debug(`Member Resolved: ${member.id}`);
 
-      await this._sendToModLog(modEmbed);
-      msg.delete({ timeout: 3000 });
-      return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
-    } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('Error has occurred');
-    }
+    const modEmbed = modActionEmbed({
+      member: member,
+      staffMember: msg.author,
+      action: 'warn',
+      reason,
+      logger: this._logger,
+    });
+
+    await this._sendToModLog(modEmbed);
+    msg.delete({ timeout: 3000 });
+    return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
+  }
+
+  private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
+    return await msg.channel.send(makeSimpleEmbed(`**Error**: ${e}`, 'RED'));
   }
 
   private async _sendToModLog(embed: MessageEmbed) {

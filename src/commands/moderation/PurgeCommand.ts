@@ -1,4 +1,11 @@
-import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
+import {
+  Collection,
+  GuildMember,
+  Message,
+  MessageEmbed,
+  Snowflake,
+  TextChannel,
+} from 'discord.js';
 import { Command, CommandHandler, Argument } from 'discord-akairo';
 import { Logger } from 'tslog';
 
@@ -52,28 +59,22 @@ export default class PurgeCommand extends Command {
   public async exec(
     msg: Message,
     { amount, member }: IPurgeArgs
-  ): Promise<Message | void> {
-    try {
-      // Execute if provide member arg
-      if (member) {
-        const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
-        const filteredMsgs = fetchedMsg
-          .filter(
-            (m: Message) =>
-              m.author.id === member.id && Date.now() - m.createdTimestamp < 1209600000
-          )
-          .array()
-          .slice(0, amount);
-        await (msg.channel as TextChannel).bulkDelete(filteredMsgs);
-        // No member arg
-      } else {
-        const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
-        const filteredMsg = fetchedMsg.array().slice(0, amount);
-        await (msg.channel as TextChannel).bulkDelete(filteredMsg);
-      }
-    } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('Internal Error Occured');
+  ): Promise<Collection<Snowflake, Message>> {
+    if (member) {
+      const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
+      const filteredMsgs = fetchedMsg
+        .filter(
+          (m: Message) =>
+            m.author.id === member.id && Date.now() - m.createdTimestamp < 1209600000
+        )
+        .array()
+        .slice(0, amount);
+      return await (msg.channel as TextChannel).bulkDelete(filteredMsgs);
+      // No member arg
+    } else {
+      const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
+      const filteredMsg = fetchedMsg.array().slice(0, amount);
+      return await (msg.channel as TextChannel).bulkDelete(filteredMsg);
     }
   }
 

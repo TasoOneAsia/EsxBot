@@ -3,7 +3,12 @@ import { Logger } from 'tslog';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
-import { discordCodeBlock, actionMessageEmbed, modActionEmbed } from '../../utils';
+import {
+  discordCodeBlock,
+  actionMessageEmbed,
+  modActionEmbed,
+  makeSimpleEmbed,
+} from '../../utils';
 import dayjs from 'dayjs';
 
 interface IBanAction {
@@ -65,6 +70,14 @@ export default class BanCommand extends Command {
     { member, duration, reason }: IBanAction
   ): Promise<Message> {
     try {
+      const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
+
+      if (msg.author.id === member.id)
+        return BanCommand._sendErrorMessage(msg, 'You cannot ban yourself');
+
+      if (member.roles.highest.position >= msgAuthor.roles.highest.position)
+        return BanCommand._sendErrorMessage(msg, 'Not allowed due to role hierachy');
+
       const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
         Infractions
       );
@@ -139,6 +152,10 @@ export default class BanCommand extends Command {
       this._logger.error(e);
       return msg.channel.send('An internal error occured');
     }
+  }
+
+  private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
+    return await msg.channel.send(makeSimpleEmbed(`**Error**: ${e}`, 'RED'));
   }
 
   private async _sendToModLog(embed: MessageEmbed) {
