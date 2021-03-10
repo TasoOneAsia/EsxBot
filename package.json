@@ -8,6 +8,7 @@
     "@types/common-tags": "^1.8.0",
     "@types/long-timeout": "^0.1.0",
     "@types/node": "^14.14.20",
+    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "eslint": "^7.17.0",
@@ -24,7 +25,9 @@
     "format": "prettier --config .prettierrc ./src/**/*.ts  --write",
     "lint": "eslint ./src --ext .ts ",
     "dev": "nodemon ./src/index.ts",
-    "dev:debug": "nodemon --inspect ./src/index.ts"
+    "dev:debug": "nodemon --inspect ./src/index.ts",
+    "db:sync": "typeorm schema:sync",
+    "db:sync-dry": "typeorm schema:log"
   },
   "dependencies": {
     "common-tags": "^1.8.0",
