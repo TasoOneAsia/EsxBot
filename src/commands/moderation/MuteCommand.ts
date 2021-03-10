@@ -9,7 +9,7 @@ export default class MuteCommand extends Command {
   private _logger: Logger;
 
   constructor(handler: CommandHandler) {
-    super('muteCmd', {
+    super('mute', {
       aliases: ['mute', 'silence'],
       description: {
         content: 'Mutes a user by adding the muted role',

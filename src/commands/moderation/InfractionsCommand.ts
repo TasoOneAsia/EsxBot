@@ -1,7 +1,7 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Logger } from 'tslog';
-import { LessThan, MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { FieldsEmbed } from 'discord-paginationembed';
 import dayjs from 'dayjs';
@@ -17,7 +17,7 @@ export default class InfractionsCommand extends Command {
       category: 'Moderation',
       description: {
         examples: ['infractions @Taso'],
-        content: 'Return the current infractions for a Player',
+        content: 'Return the current infractions for a Member',
         usage: 'infractions <user>',
       },
       args: [

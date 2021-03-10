@@ -10,7 +10,7 @@ export default class StatusCommand extends Command {
   constructor(handler: CommandHandler) {
     super('status', {
       aliases: ['status', 'stats', 'stat'],
-      category: 'Debug',
+      category: 'Misc',
       description: {
         content: 'Returns stats for Guild and Bot',
         usage: 'status',
@@ -40,7 +40,7 @@ export default class StatusCommand extends Command {
       new MessageEmbed()
         .setTitle('ESX Guild & Bot Stats')
         .setColor('#00c400')
-        .setImage(<string>msg.guild.iconURL())
+        .setThumbnail(<string>msg.guild.iconURL())
         .setTimestamp()
         .setFooter(msg.author.tag, msg.author.displayAvatarURL())
         // TODO: Reduce reundant code

@@ -1,7 +1,7 @@
 import { Command, Listener, ListenerHandler } from 'discord-akairo';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Logger } from 'tslog';
-import { modActionEmbed, discordCodeBlock } from '../../utils';
+import { modActionEmbed, discordCodeBlock, makeSimpleEmbed } from '../../utils';
 
 export default class MissingPermListener extends Listener {
   private readonly _logger: Logger;
@@ -42,7 +42,9 @@ export default class MissingPermListener extends Listener {
     await this._sendToModLog(embed);
 
     return msg.channel.send(
-      `**Missing Permission**: You do not have the correct permissions for **${cmd}**`
+      makeSimpleEmbed(
+        `**Missing Permission**: You do not have the correct permissions for **${cmd}**`
+      )
     );
   }
 

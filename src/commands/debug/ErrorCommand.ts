@@ -1,5 +1,4 @@
 import { Command } from 'discord-akairo';
-import { Message } from 'discord.js';
 
 export default class StatusCommand extends Command {
   constructor() {
@@ -7,9 +6,9 @@ export default class StatusCommand extends Command {
       aliases: ['error'],
       category: 'Debug',
       description: {
-        content: 'Returns stats for Guild and Bot',
-        usage: 'status',
-        examples: ['status'],
+        content: 'Throws a debug error',
+        usage: 'error',
+        examples: ['error'],
       },
       ownerOnly: true,
     });

@@ -13,13 +13,7 @@ export default class PingCommand extends Command {
         content: "Return Bot's latency info",
         usage: 'ping',
       },
-      category: 'Debug',
-      args: [
-        {
-          id: 'keepData',
-          flag: 'keep',
-        },
-      ],
+      category: 'Misc',
       channel: 'guild',
     });
 
