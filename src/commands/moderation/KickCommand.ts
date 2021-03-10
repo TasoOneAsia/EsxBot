@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 import { IModActionArgs } from '../../types';
 import { Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
-import { actionMessageEmbed, modActionEmbed } from '../../utils/moderationUtils';
+import { actionMessageEmbed, modActionEmbed } from '../../utils';
 import { makeSimpleEmbed } from '../../utils';
 
 export default class KickCommand extends Command {
@@ -48,6 +48,8 @@ export default class KickCommand extends Command {
     { member, reason }: IModActionArgs
   ): Promise<Message | null> {
     // TODO: Hierachal permission structure
+    const msgAuthor = await msg.guild!.members.fetch(msg.id);
+
     if (!msg.guild) return null;
 
     if (msg.author.id === member.id)
