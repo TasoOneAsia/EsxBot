@@ -1,8 +1,8 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { Message, MessageEmbed, MessageOptions } from 'discord.js';
 import * as ArgumentTypes from '../structures/argumentTypes';
 import { Connection } from 'typeorm';
-import Database from '../structures/Database';
+import Database, { connectionName } from '../structures/Database';
 import {
   DEFAULT_PREFIX,
   OWNER_IDS,
@@ -14,6 +14,7 @@ import {
 import { Logger, ILogObject } from 'tslog';
 import path from 'path';
 import fs from 'fs';
+import { makeSimpleEmbed } from '../utils';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
@@ -45,12 +46,34 @@ export default class EsxBot extends AkairoClient {
     defaultCooldown: DEFAULT_COOLDOWN,
     argumentDefaults: {
       prompt: {
-        modifyStart: (_: Message, str: string): string =>
-          `${str}\n\nType \`cancel\` to cancel the commmand...`,
-        modifyRetry: (_: Message, str: string): string =>
-          `${str}\n\nType \`cancel\` to cancel the commmand...`,
-        timeout: 'Command timedout',
-        ended: 'You reached the maximum retries, command cancelled.',
+        modifyStart: (msg: Message, str: string): MessageOptions => {
+          const embed = new MessageEmbed()
+            .setColor('RANDOM')
+            .setDescription(str)
+            .setFooter(
+              `Type \`cancel\` to cancel the command or ${this.commandHandler.prefix}help [command]`,
+              msg.author.displayAvatarURL()
+            );
+          return { embed };
+        },
+        modifyRetry: (msg: Message, str: string): MessageOptions => {
+          const embed = new MessageEmbed()
+            .setColor('RANDOM')
+            .setDescription(str)
+            .setFooter(
+              `Type \`cancel\` to cancel the command or ${this.commandHandler.prefix}help [command]`,
+              msg.author.displayAvatarURL()
+            );
+          return { embed };
+        },
+        timeout: () => makeSimpleEmbed(`Timed out!`),
+        ended: (msg: Message) => {
+          const embed = new MessageEmbed()
+            .setDescription('You have reached the maximum retries')
+            .setColor('RED')
+            .setFooter('Project Error', msg.author.displayAvatarURL());
+          return { embed };
+        },
         retries: 3,
         time: 3e4,
       },
@@ -72,8 +95,6 @@ export default class EsxBot extends AkairoClient {
   }
 
   private async _init(): Promise<void> {
-    this.log.debug(`Out Dir: ${LOG_OUTPUT_PATH}`);
-
     this.commandHandler.useListenerHandler(this.listenerHandler);
 
     this.listenerHandler.setEmitters({
@@ -107,13 +128,17 @@ export default class EsxBot extends AkairoClient {
     this.listenerHandler.loadAll();
     this.log.info('Loading Complete');
 
-    this.db = Database.get(process.env.DB_NAME);
+    this.db = Database.get(connectionName);
     this.log.info('Starting DB Connect and Sync');
     try {
       await this.db.connect();
       // Only sync in development
-      if (process.env.NODE_ENV === 'development') await this.db.synchronize();
-      this.log.info('DB Connected and Synced');
+      if (process.env.NODE_ENV === 'development') {
+        await this.db.synchronize();
+        this.log.debug('Synchronizing schema as env is development');
+      }
+
+      this.log.info('DB Connected');
     } catch (e) {
       this.log.error(e);
     }
