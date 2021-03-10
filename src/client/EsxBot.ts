@@ -3,6 +3,7 @@ import { AkairoClient, CommandHandler, ListenerHandler } from 'discord-akairo';
 import { Message, MessageEmbed, MessageOptions } from 'discord.js';
 import * as ArgumentTypes from '../structures/argumentTypes';
 import { Connection } from 'typeorm';
+import { ManagerHandler } from '../structures/managers/ManagerHandler';
 import Database, { connectionName } from '../structures/Database';
 import {
   DEFAULT_PREFIX,
