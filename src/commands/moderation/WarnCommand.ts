@@ -57,6 +57,7 @@ export default class WarnCommand extends Command {
 
     await infractionsRepo.insert({
       user: member.id,
+      guildId: member.guild.id,
       staffMember: msg.author.id,
       reason: reason,
       infractionType: 'warn',
@@ -74,7 +75,9 @@ export default class WarnCommand extends Command {
 
     await this.client._actions.sendToModLog(modEmbed);
     msg.delete({ timeout: 3000 });
-    return msg.channel.send(`${member}, **has been warned.** (Reason: \`${reason}\`)`);
+    return msg.channel.send(
+      makeSimpleEmbed(`${member}, **has been warned.** (Reason: \`${reason}\``)
+    );
   }
 
   private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
