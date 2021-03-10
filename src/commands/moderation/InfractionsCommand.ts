@@ -38,7 +38,10 @@ export default class InfractionsCommand extends Command {
     });
   }
 
-  public async exec(msg: Message, { member }: { member: GuildMember }) {
+  public async exec(
+    msg: Message,
+    { member }: { member: GuildMember }
+  ): Promise<void | Message> {
     const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
       Infractions
     );
@@ -46,7 +49,6 @@ export default class InfractionsCommand extends Command {
     const infracts = await infractionsRepo.find({
       where: {
         user: member.user.id,
-        createdDate: MoreThan(dayjs().subtract(30, 'days')),
       },
     });
 
@@ -105,9 +107,7 @@ export default class InfractionsCommand extends Command {
         stripIndents`
       **Joined Date**: ${dayjs(joinedAt).format('DD/MM/YYYY')}
       **Account Age**: ${dayjs(accountAge).format('DD/MM/YYYY')}
-      **Infractions**: ${infracts.length || '0'}
-      
-      ${infracts.length ?? 'This user has no infractions'}
+      **Infractions**: ${infracts.length || '0'}  
       `
       )
       .setFooter('ESX Discord')
