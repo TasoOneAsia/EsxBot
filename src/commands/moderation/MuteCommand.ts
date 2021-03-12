@@ -91,8 +91,10 @@ export default class MuteCommand extends Command {
 
     const mutedRole = msg.guild!.roles.cache.get(<string>process.env.MUTE_ROLE_ID);
 
-    if (mutedRole) member.roles.add(mutedRole, reason);
-
+    if (mutedRole) {
+      this._logger.debug('Muted role resolved');
+      member.roles.set([mutedRole], reason);
+    }
     return msg.channel.send(makeSimpleEmbed(`${member} was muted for \`${reason}\``));
   }
 
