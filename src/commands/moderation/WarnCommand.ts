@@ -51,19 +51,7 @@ export default class WarnCommand extends Command {
         'This was not allowed due to role hierachy'
       );
 
-    const infractionsRepo: Repository<Infractions> = this.client.db.getRepository(
-      Infractions
-    );
-
-    await infractionsRepo.insert({
-      user: member.id,
-      guildId: member.guild.id,
-      staffMember: msg.author.id,
-      reason: reason,
-      infractionType: 'warn',
-    });
-
-    this._logger.debug(`Member Resolved: ${member.id}`);
+    await this.client._actions.warn(member, msgAuthor.user, reason);
 
     const modEmbed = modActionEmbed({
       member: member,
@@ -74,7 +62,10 @@ export default class WarnCommand extends Command {
     });
 
     await this.client._actions.sendToModLog(modEmbed);
-    msg.delete({ timeout: 3000 });
+    msg
+      .delete({ timeout: 3000 })
+      .catch((e) => this._logger.error('Could not delete message', e));
+
     return msg.channel.send(
       makeSimpleEmbed(`${member}, **has been warned.** (Reason: \`${reason}\`)`)
     );

@@ -1,9 +1,7 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { GuildMember, Message } from 'discord.js';
-import Infractions from '../../models/Infractions';
-import { Repository } from 'typeorm';
-import { actionMessageEmbed, makeSimpleEmbed } from '../../utils';
+import { makeSimpleEmbed } from '../../utils';
 
 export default class MuteCommand extends Command {
   private _logger: Logger;
@@ -46,10 +44,6 @@ export default class MuteCommand extends Command {
     msg: Message,
     { member, reason }: { member: GuildMember; reason: string }
   ): Promise<Message> {
-    const infractsRepo: Repository<Infractions> = this.client.db.getRepository(
-      Infractions
-    );
-
     const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
 
     if (msg.author.id === member.id)
@@ -61,40 +55,8 @@ export default class MuteCommand extends Command {
         'This was not allowed due to role hierachy'
       );
 
-    await infractsRepo.insert({
-      user: member.id,
-      reason: reason,
-      infractionType: 'mute',
-      guildId: member.guild.id,
-      staffMember: msg.author.id,
-    });
+    await this.client._actions.muteUser(member, msg.author, reason);
 
-    this._logger.debug(`Added mute infraction for ${member.id}`);
-
-    const dmEmbed = actionMessageEmbed({
-      action: 'mute',
-      reason,
-      logger: this._logger,
-      member: member,
-      staffMember: msg.author,
-    });
-
-    try {
-      // Send DM before mute
-      await member.send(dmEmbed);
-      this._logger.debug(`Sent ${member.id} a direct message`);
-    } catch (e) {
-      this._logger.error(
-        `Could not send direct message to ${member.user.tag} or could not kick`
-      );
-    }
-
-    const mutedRole = msg.guild!.roles.cache.get(<string>process.env.MUTE_ROLE_ID);
-
-    if (mutedRole) {
-      this._logger.debug('Muted role resolved');
-      member.roles.set([mutedRole], reason);
-    }
     return msg.channel.send(makeSimpleEmbed(`${member} was muted for \`${reason}\``));
   }
 

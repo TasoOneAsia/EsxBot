@@ -89,8 +89,6 @@ export default class InfractionsCommand extends Command {
       .setTimestamp()
       .setThumbnail(member.user.displayAvatarURL());
 
-    this._logger.debug(paginatedEmbed.embed);
-
     return await paginatedEmbed.build();
   }
 

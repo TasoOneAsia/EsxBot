@@ -1,7 +1,9 @@
-import { GuildMember } from 'discord.js';
-import { Repository } from 'typeorm';
+import { GuildMember, User } from 'discord.js';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { Manager } from '../../structures/managers/Manager';
+import dayjs from 'dayjs';
+
 export default class WarnManager extends Manager {
   private infractionsRepo!: Repository<Infractions>;
 
@@ -19,6 +21,22 @@ export default class WarnManager extends Manager {
       reason: reason,
       infractionType: 'warn',
     });
+
+    const numberOfWarns = await this.infractionsRepo.find({
+      where: {
+        user: member.id,
+        infractionType: 'warn',
+        createdDate: MoreThan(dayjs().subtract(7, 'days').toDate()),
+      },
+    });
+
+    if (numberOfWarns.length >= 3) {
+      await this.client._actions.muteUser(
+        member,
+        <User>this.client.user,
+        'Automatically muted after three warnings'
+      );
+    }
   }
 
   public exec(): void {
