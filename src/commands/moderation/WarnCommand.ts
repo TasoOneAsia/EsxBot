@@ -1,10 +1,8 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Message } from 'discord.js';
 import { Logger } from 'tslog';
-import { Repository } from 'typeorm';
 import { makeSimpleEmbed, modActionEmbed } from '../../utils';
 import { IModActionArgs } from '../../types';
-import Infractions from '../../models/Infractions';
 
 export default class WarnCommand extends Command {
   private readonly _logger: Logger;

@@ -1,5 +1,5 @@
 import { GuildMember, User } from 'discord.js';
-import { LessThan, MoreThan, Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { Manager } from '../../structures/managers/Manager';
 import dayjs from 'dayjs';

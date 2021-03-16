@@ -42,11 +42,7 @@ export const makeErrorEmbed = (err: Error, showStack?: boolean): MessageEmbed =>
     .setFooter('If this is a consistent error, please contact the staff team');
 
   if (showStack) {
-    const formatStack = discordCodeBlock(
-      cleanStack(err.stack as string, {
-        pretty: true,
-      })
-    );
+    const formatStack = discordCodeBlock(cleanStack(err.stack as string));
     embed.setDescription(formatStack);
   } else {
     embed.setDescription(discordCodeBlock(err.message));

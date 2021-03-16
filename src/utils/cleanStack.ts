@@ -1,5 +1,3 @@
-const extractPathRegex = /\s+at.*[(\s](.*)\)?/g;
-const pathRegex = /^(?:(?:(?:node|(?:(?:node:)?internal\/[\w/]*|.*node_modules\/(?:babel-polyfill|pirates)\/.*)?\w+)(?:\.js)?:\d+:\d+)|native)/;
 const homeDir = process.cwd().replace(/\\/g, '\\\\');
 
 export interface ICleanStackOpts {
@@ -17,12 +15,8 @@ export interface ICleanStackOpts {
 /**
  * Clean/prettify an error stack
  * @param stack Error stack to handle
- * @param args
  **/
-export const cleanStack = (
-  stack: string,
-  { pretty, basePath }: ICleanStackOpts = {}
-): string => {
+export const cleanStack = (stack: string): string => {
   //const basePathRegex = basePath && new RegExp(`(at | \\()${escapeStringRegexp(basePath)}`, 'g');
   return stack.replace(new RegExp(homeDir, 'g'), '~').replace(/\\/g, '/');
 };

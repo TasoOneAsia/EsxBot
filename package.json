@@ -59,7 +59,7 @@
       "NODE_ENV": "development"
     },
     "execMap": {
-      "ts": "node --require ts-node/register"
+      "ts": "npm run lint && node --require ts-node/register"
     }
   },
   "husky": {
