@@ -62,7 +62,7 @@ export const FILTER_WHITELIST_ROLES = (<string>process.env.FILTER_WHITE_LIST_ROL
   ','
 );
 // Messages containing these word will automatically be deleted
-export const BLACKLISTED_WORDS = ['zipperhead', 'idiot', 'moron'];
+export const BLACKLISTED_WORDS = ['zipperhead', 'nigger', 'nigga'];
 
 /*
  * CommandHandler settings
