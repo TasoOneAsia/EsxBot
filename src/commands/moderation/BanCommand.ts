@@ -1,8 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
-import { Repository } from 'typeorm';
-import Infractions from '../../models/Infractions';
 import {
   discordCodeBlock,
   actionMessageEmbed,
@@ -69,49 +67,43 @@ export default class BanCommand extends Command {
     msg: Message,
     { member, duration, reason }: IBanAction
   ): Promise<Message | null> {
+    const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
+
+    if (msg.author.id === member.id)
+      return BanCommand._sendErrorMessage(msg, 'You cannot ban yourself');
+
+    if (member.roles.highest.position >= msgAuthor.roles.highest.position)
+      return BanCommand._sendErrorMessage(msg, 'Not allowed due to role hierachy');
+
+    msg.delete({ timeout: 3000 });
+
+    if (!duration) return msg.reply('Incorrect date format');
+
+    const unbanDate = duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
+
+    await this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
+
+    const [dmEmbed, logEmbed] = this._buildEmbeds(
+      msg,
+      member,
+      reason,
+      unbanDate ? unbanDate.format('MM/DD/YY') : 'Permanently Banned'
+    );
+
     try {
-      const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
-
-      if (msg.author.id === member.id)
-        return BanCommand._sendErrorMessage(msg, 'You cannot ban yourself');
-
-      if (member.roles.highest.position >= msgAuthor.roles.highest.position)
-        return BanCommand._sendErrorMessage(msg, 'Not allowed due to role hierachy');
-
-      msg.delete({ timeout: 3000 });
-
-      if (!duration) return msg.reply('Incorrect date format');
-
-      const unbanDate =
-        duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
-
-      await this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
-
-      const [dmEmbed, logEmbed] = this._buildEmbeds(
-        msg,
-        member,
-        reason,
-        unbanDate ? unbanDate.format('MM/DD/YY') : 'Permanently Banned'
-      );
-
-      try {
-        await member.send(dmEmbed);
-      } catch (e) {
-        this._logger.error(`Unable to send direct message to ${member.user.username}`);
-      }
-
-      await this.client._actions.sendToModLog(logEmbed);
-
-      const liftMessage = unbanDate
-        ? `be lifted on ${unbanDate.format('MM/DD/YY')}`
-        : 'never be lifted';
-      return msg.channel.send(
-        `**${member.user.tag}** was banned for **${reason}**. The ban will ${liftMessage}`
-      );
+      await member.send(dmEmbed);
     } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('An internal error occured');
+      this._logger.error(`Unable to send direct message to ${member.user.username}`);
     }
+
+    await this.client._actions.sendToModLog(logEmbed);
+
+    const liftMessage = unbanDate
+      ? `be lifted on ${unbanDate.format('MM/DD/YY')}`
+      : 'never be lifted';
+    return msg.channel.send(
+      `**${member.user.tag}** was banned for **${reason}**. The ban will ${liftMessage}`
+    );
   }
 
   private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
