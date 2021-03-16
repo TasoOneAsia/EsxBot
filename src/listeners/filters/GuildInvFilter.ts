@@ -1,5 +1,5 @@
 import { Listener, ListenerHandler } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Message, MessageEmbed, TextChannel, User } from 'discord.js';
 import { Logger } from 'tslog';
 import { modActionEmbed, discordCodeBlock } from '../../utils';
 import { FILTER_WHITELIST_ROLES } from '../../config';
@@ -48,7 +48,11 @@ export default class GuildInvInhibitor extends Listener {
             },
           ],
         });
-        this.client._actions.warn(member, '0', 'Posting discord invites into a guild');
+        await this.client._actions.warn(
+          member,
+          <User>this.client.user,
+          'Posting discord invites for a guild'
+        );
         await this._sendToModLog(embed);
       }
     }
