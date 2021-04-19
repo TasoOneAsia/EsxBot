@@ -47,8 +47,7 @@ export default class KickCommand extends Command {
     msg: Message,
     { member, reason }: IModActionArgs
   ): Promise<Message | null> {
-    // TODO: Hierachal permission structure
-    const msgAuthor = await msg.guild!.members.fetch(msg.id);
+    const msgAuthor = await msg.guild!.members.fetch(msg.author.id);
 
     if (!msg.guild) return null;
 
