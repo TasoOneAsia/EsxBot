@@ -17,7 +17,7 @@ export default class StaticCommandManager extends Manager {
   }
 
   public exec(): void {
-    const basePath = path.join(__dirname, '../../commands/static');
+    const basePath = path.join(__dirname, '../../../static');
 
     if (!fs.existsSync(basePath)) {
       fs.mkdirSync(basePath);
