@@ -45,7 +45,7 @@ export default class HelpCommand extends Command {
         return;
       }
 
-      if (command.category.id !== 'Static' && !isMod) {
+      if (command.category.id === 'Moderation' && !isMod) {
         this.client.commandHandler.emit(
           'missingPermissions',
           message,
@@ -104,7 +104,7 @@ export default class HelpCommand extends Command {
       if (category.id === 'Debug' && !this.client.ownerID.includes(message.author.id))
         continue;
 
-      if (!isMod && category.id !== 'Static') continue;
+      if (!isMod && category.id === 'Moderation') continue;
 
       embed.addField(
         category.id,
