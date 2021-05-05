@@ -135,13 +135,6 @@ export default class EsxBot extends AkairoClient {
     }
 
     this.log.info('Loading Command Handler');
-    this.commandHandler.loadAll();
-    this.log.info('Loading Listener Handler');
-    this.listenerHandler.loadAll();
-    this.log.info('Loading Manager Handler');
-    this.managerHandler.loadAll();
-    this.log.info('Loading Complete');
-
     this.db = Database.get(connectionName);
     this.log.info('Starting DB Connect and Sync');
     try {
@@ -156,6 +149,13 @@ export default class EsxBot extends AkairoClient {
     } catch (e) {
       this.log.error(e);
     }
+    this.commandHandler.loadAll();
+    this.log.info('Loading Listener Handler');
+    this.listenerHandler.loadAll();
+    this.log.info('Loading Manager Handler');
+    this.managerHandler.loadAll();
+
+    this.log.info('Loading Complete');
   }
 
   private _logToTransport(logObj: ILogObject) {

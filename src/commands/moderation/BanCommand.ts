@@ -79,9 +79,14 @@ export default class BanCommand extends Command {
 
     if (!duration) return msg.reply('Incorrect date format');
 
-    const unbanDate = duration == 'perma' ? null : dayjs().add(duration as number, 'ms');
+    const unbanDate = duration === 'perma' ? null : dayjs().add(duration as number, 'ms');
 
-    await this.client._actions.ban(member, unbanDate ? unbanDate.unix() : 0, reason);
+    await this.client._actions.ban({
+      member,
+      duration: unbanDate && unbanDate.unix(),
+      staff: msg.author.id,
+      reason,
+    });
 
     const [dmEmbed, logEmbed] = this._buildEmbeds(
       msg,

@@ -39,9 +39,10 @@ export default class Infractions {
   reason!: string;
 
   @Column({
+    type: 'integer',
     nullable: true,
   })
-  unbanDate!: number;
+  unbanDate!: number | null;
 
   @CreateDateColumn()
   createdDate!: Date;

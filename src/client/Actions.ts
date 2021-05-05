@@ -6,6 +6,13 @@ import { actionMessageEmbed, modActionEmbed } from '../utils';
 import { Repository } from 'typeorm';
 import Infractions from '../models/Infractions';
 
+export interface AddBanData {
+  member: GuildMember;
+  duration: number | null;
+  staff?: string;
+  reason?: string;
+}
+
 export class Actions {
   private client: EsxBot;
   private readonly _logger: Logger;
@@ -41,18 +48,13 @@ export class Actions {
     /* Possibly do more things on warn, log, etc.. */
   }
 
-  public async ban(
-    member: GuildMember,
-    duration: number,
-    staff?: string,
-    reason?: string
-  ): Promise<void> {
-    await (<BanManager>this.client.managerHandler.modules.get('ban')).add(
+  public async ban({ member, duration, staff, reason }: AddBanData): Promise<void> {
+    await (<BanManager>this.client.managerHandler.modules.get('ban')).add({
       member,
       duration,
       staff,
-      reason
-    );
+      reason,
+    });
     //this.EsxBot.managers.ban.add(member, duration, staff, reason);
     /* Possibly do more things on ban, log, etc.. */
   }
