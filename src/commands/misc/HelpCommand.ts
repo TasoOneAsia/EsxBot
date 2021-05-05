@@ -22,10 +22,14 @@ export default class HelpCommand extends Command {
     });
   }
 
-  public exec(
+  public async exec(
     message: Message,
     { command }: { command: Command }
-  ): Promise<Message> | void {
+  ): Promise<Message | void> {
+    const msgAuthor = await message.guild!.members.fetch(message.author.id);
+
+    const isMod = msgAuthor.permissions.has('BAN_MEMBERS');
+
     if (command) {
       if (
         command.category.id === 'Debug' &&
@@ -37,6 +41,17 @@ export default class HelpCommand extends Command {
           command,
           'user',
           'DebugView'
+        );
+        return;
+      }
+
+      if (command.category.id !== 'Static' && !isMod) {
+        this.client.commandHandler.emit(
+          'missingPermissions',
+          message,
+          command,
+          'user',
+          'UnauthorizedCommand'
         );
         return;
       }
@@ -85,10 +100,11 @@ export default class HelpCommand extends Command {
 
     for (const category of this.handler.categories.values()) {
       if (['default'].includes(category.id)) continue;
-
       // Don't show debug category for clients
       if (category.id === 'Debug' && !this.client.ownerID.includes(message.author.id))
         continue;
+
+      if (!isMod && category.id !== 'Static') continue;
 
       embed.addField(
         category.id,
