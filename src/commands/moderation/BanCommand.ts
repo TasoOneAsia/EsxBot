@@ -1,6 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
+import { GuildMember, Message, MessageEmbed } from 'discord.js';
 import {
   discordCodeBlock,
   actionMessageEmbed,
@@ -34,7 +34,7 @@ export default class BanCommand extends Command {
           id: 'member',
           type: 'member',
           prompt: {
-            start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
+            start: (msg: Message) => `${msg.author}, provide a valid member to ban`,
             retry: (msg: Message) =>
               `${msg.author}, that member was not resolved. Please try again`,
           },
@@ -98,7 +98,7 @@ export default class BanCommand extends Command {
     try {
       await member.send(dmEmbed);
     } catch (e) {
-      this._logger.error(`Unable to send direct message to ${member.user.username}`);
+      this._logger.error(`Unable to send direct message to ${member.user.username}`, e);
     }
 
     await this.client._actions.sendToModLog(logEmbed);
@@ -106,27 +106,16 @@ export default class BanCommand extends Command {
     const liftMessage = unbanDate
       ? `be lifted on ${unbanDate.format('MM/DD/YY')}`
       : 'never be lifted';
-    return msg.channel.send(
+
+    const replyEmbed = makeSimpleEmbed(
       `**${member.user.tag}** was banned for **${reason}**. The ban will ${liftMessage}`
     );
+
+    return msg.channel.send(replyEmbed);
   }
 
   private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
     return await msg.channel.send(makeSimpleEmbed(`**Error**: ${e}`, 'RED'));
-  }
-
-  private async _sendToModLog(embed: MessageEmbed) {
-    if (!process.env.ADMIN_LOG_CHANNEL_ID)
-      throw new Error('ADMIN_LOG_CHANNEL_ID Env variable not defined');
-
-    const channel = this.client.channels.cache.get(
-      <string>process.env.ADMIN_LOG_CHANNEL_ID
-    ) as TextChannel;
-    try {
-      await channel.send(embed);
-    } catch (e) {
-      this._logger.error(e);
-    }
   }
 
   private _buildEmbeds(
