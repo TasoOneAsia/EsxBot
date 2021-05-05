@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, TextChannel, User } from 'discord.js';
+import { GuildMember, MessageEmbed, Role, TextChannel, User } from 'discord.js';
 import EsxBot from './EsxBot';
 import { BanManager, WarnManager } from './managers';
 import { Logger } from 'tslog';
@@ -123,6 +123,27 @@ export class Actions {
     if (mutedRole) {
       await member.roles.set([mutedRole], reason);
       this._logger.debug(`Applied muted role to ${member.user.tag}`);
+    }
+  }
+
+  unmuteUser(member: GuildMember, role: 'newbie' | 'developer'): void {
+    const devRole = <Role>(
+      member.guild.roles.cache.get(<string>process.env.DEVELOPER_ROLE_ID)
+    );
+    const newbieRole = <Role>(
+      member.guild.roles.cache.get(<string>process.env.NEWBIE_ROLE_ID)
+    );
+
+    if (role === 'newbie') {
+      member.roles
+        .set([newbieRole])
+        .catch((e) => this._logger.error('Unable to set role to newbie', e));
+    }
+
+    if (role === 'developer') {
+      member.roles
+        .set([devRole])
+        .catch((e) => this._logger.error('Unable to set role to developer', e));
     }
   }
 }

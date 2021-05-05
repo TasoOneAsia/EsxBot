@@ -22,7 +22,7 @@ export default class MuteCommand extends Command {
           id: 'member',
           type: 'member',
           prompt: {
-            start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
+            start: (msg: Message) => `${msg.author}, provide a valid member to mute`,
             retry: (msg: Message) =>
               `${msg.author}, that member was not resolved. Please try again`,
           },
