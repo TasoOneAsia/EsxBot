@@ -1,5 +1,5 @@
 {
   "aliases": ["plumeesx","prebuild","premade"],
-  "replyMsg": "**Plume ESX**\nPlumeESX is a prebuilt package version of ESX Legacy provided by txAdmin.\nIt is reccomended for new people to use to have a base server to build in.\nFor more information please read the #read-me channel.",
+  "replyMsg": "**Plume ESX**\nPlumeESX is a prebuilt package version of ESX Legacy provided by txAdmin.\nIt is reccomended for new people to use to have a base server to build in.\nFor more information please read the <#828389272595595294> channel.",
   "description": "Plume Description"
 }
