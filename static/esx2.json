@@ -1,5 +1,5 @@
 {
   "aliases": [],
-  "replyMsg": "**Latest ESX2 Version**: https://github.com/esx-framework/es_extended/tree/develop\n**Current Progress In ESX2**: https://app.gitkraken.com/glo/board/XyGBRrdtWgARfLBr\n**Bare in mind that ESX2 is still WIP. The Team will not provide support for ESX2 while it's in developmental state.**",
+  "replyMsg": "**Latest ESX2 Version**: <https://github.com/esx-framework/es_extended/tree/develop>\n**Current Progress In ESX2**: <https://app.gitkraken.com/glo/board/XyGBRrdtWgARfLBr>\n**Bare in mind that ESX2 is still WIP. The Team will not provide support for ESX2 while it's in developmental state.**",
   "description": "Link to GitKraken page and develop branch and a note that it's still WIP"
 }
