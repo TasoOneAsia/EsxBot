@@ -24,6 +24,7 @@ declare module 'discord-akairo' {
     db: Connection;
     commandHandler: CommandHandler;
     listenerHandler: ListenerHandler;
+    managerHandler: ManagerHandler;
     _actions: Actions;
   }
 }
