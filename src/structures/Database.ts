@@ -1,6 +1,7 @@
 import { ConnectionManager } from 'typeorm';
 import Infracts from '../models/Infractions';
 import GuildSettings from '../models/GuildSettings';
+import CommandsRan from '../models/CommandsRan';
 
 const connectManager = new ConnectionManager();
 
@@ -15,7 +16,7 @@ connectManager.create({
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || undefined,
   database: process.env.DB_NAME,
-  entities: [Infracts, GuildSettings],
+  entities: [Infracts, GuildSettings, CommandsRan],
 });
 
 export default connectManager;
