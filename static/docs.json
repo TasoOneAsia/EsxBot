@@ -1,5 +1,5 @@
 {
   "aliases": ["documents","esxdoc"],
-  "replyMsg": "**ESX Documentation**: <https://wiki.esx-framework.org/>",
+  "replyMsg": "**ESX Documentation**: <https://esx-framework.github.io/>",
   "description": "Link to ESX Docs"
 }
