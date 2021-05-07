@@ -1,5 +1,5 @@
 {
-  "aliases": [],
+  "aliases": ["legacy"],
   "replyMsg": "**ESX1 Legacy Branch**: <https://github.com/esx-framework/es_extended/tree/legacy>",
-  "description": "Link to legacy branch es_extended"
+  "description": "Link to Legacy Branch"
 }
