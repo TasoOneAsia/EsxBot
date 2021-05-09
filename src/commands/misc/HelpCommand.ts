@@ -18,7 +18,6 @@ export default class HelpCommand extends Command {
           default: null,
         },
       ],
-      userPermissions: 'KICK_MEMBERS',
     });
   }
 
