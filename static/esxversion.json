@@ -1,0 +1,5 @@
+{
+  "aliases": ["esxver","version"],
+  "replyMsg": "To find your ESX Version, look in the `fxmanifest` file in your `es_extended` folder.\nIn older versions of ESX, v1.1 and earlier, the file is instead named `__resource`.",
+  "description": "How to Find My ESX Version"
+}

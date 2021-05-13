@@ -16,6 +16,7 @@ export default class ExecCommand extends Command {
       },
       category: 'Debug',
       ownerOnly: true,
+      typing: true,
       args: [
         {
           id: 'input',

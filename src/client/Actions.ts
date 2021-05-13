@@ -15,22 +15,22 @@ export interface AddBanData {
 
 export class Actions {
   private client: EsxBot;
-  private readonly _logger: Logger;
+  private readonly log: Logger;
 
   constructor(EsxBot: EsxBot) {
     this.client = EsxBot;
 
-    this._logger = this.client.log.getChildLogger({
+    this.log = this.client.log.getChildLogger({
       name: 'ActionsLogger',
     });
   }
 
   public async warn(member: GuildMember, staff: User, reason: string): Promise<void> {
-    this._logger.debug(`Warning user ${member.id}`);
+    this.log.debug(`Warning user ${member.id}`);
     const actionEmbed = actionMessageEmbed({
       action: 'warn',
       reason,
-      logger: this._logger,
+      logger: this.log,
       member,
       staffMember: staff,
     });
@@ -43,7 +43,7 @@ export class Actions {
 
     member
       .send(actionEmbed)
-      .catch((e) => this._logger.error('Could not send DM to member', e));
+      .catch((e) => this.log.error('Could not send DM to member', e));
 
     /* Possibly do more things on warn, log, etc.. */
   }
@@ -70,7 +70,7 @@ export class Actions {
     try {
       await channel.send(embed);
     } catch (e) {
-      this._logger.error(e);
+      this.log.error(e);
     }
   }
 
@@ -91,14 +91,14 @@ export class Actions {
       staffMember: staffMember.id,
     });
 
-    this._logger.debug(`Added mute infraction for ${member.id}`);
+    this.log.debug(`Added mute infraction for ${member.id}`);
 
     const mutedRole = member.guild.roles.cache.get(<string>process.env.MUTE_ROLE_ID);
 
     const dmEmbed = actionMessageEmbed({
       action: 'mute',
       reason,
-      logger: this._logger,
+      logger: this.log,
       member,
       staffMember,
     });
@@ -106,7 +106,7 @@ export class Actions {
     const modLogEmbed = modActionEmbed({
       action: 'mute',
       reason,
-      logger: this._logger,
+      logger: this.log,
       member,
       staffMember,
     });
@@ -117,12 +117,12 @@ export class Actions {
     member
       .send(dmEmbed)
       .catch((e) =>
-        this._logger.error(`Could not send direct message to ${member.user.tag}`, e)
+        this.log.error(`Could not send direct message to ${member.user.tag}`, e)
       );
 
     if (mutedRole) {
       await member.roles.set([mutedRole], reason);
-      this._logger.debug(`Applied muted role to ${member.user.tag}`);
+      this.log.debug(`Applied muted role to ${member.user.tag}`);
     }
   }
 
@@ -137,13 +137,13 @@ export class Actions {
     if (role === 'newbie') {
       member.roles
         .set([newbieRole])
-        .catch((e) => this._logger.error('Unable to set role to newbie', e));
+        .catch((e) => this.log.error('Unable to set role to newbie', e));
     }
 
     if (role === 'developer') {
       member.roles
         .set([devRole])
-        .catch((e) => this._logger.error('Unable to set role to developer', e));
+        .catch((e) => this.log.error('Unable to set role to developer', e));
     }
   }
 }

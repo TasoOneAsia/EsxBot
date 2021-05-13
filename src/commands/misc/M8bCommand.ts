@@ -36,6 +36,7 @@ export default class M8BCommand extends Command {
     const embed = makeSimpleEmbed(
       `You asked: \`${question}\` \n :8ball: : \`${answer}\``
     );
+
     return msg.channel.send(embed);
   }
 }

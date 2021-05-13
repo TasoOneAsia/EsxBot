@@ -1,6 +1,8 @@
-import { Collection, GuildMember, Message, Snowflake, TextChannel } from 'discord.js';
+import { GuildMember, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Command, CommandHandler, Argument } from 'discord-akairo';
 import { Logger } from 'tslog';
+import dayjs from 'dayjs';
+import { makeSimpleEmbed } from '../../utils';
 
 interface IPurgeArgs {
   amount: number;
@@ -8,7 +10,7 @@ interface IPurgeArgs {
 }
 
 export default class PurgeCommand extends Command {
-  private _logger: Logger;
+  private log: Logger;
   public constructor(handler: CommandHandler) {
     super('purge', {
       aliases: ['purge', 'delete', 'clear'],
@@ -44,30 +46,55 @@ export default class PurgeCommand extends Command {
       ],
     });
 
-    this._logger = handler.client.log.getChildLogger({
+    this.log = handler.client.log.getChildLogger({
       name: 'PurgeCmd',
       prefix: ['PurgeCmd'],
     });
   }
-  public async exec(
-    msg: Message,
-    { amount, member }: IPurgeArgs
-  ): Promise<Collection<Snowflake, Message>> {
+  public async exec(msg: Message, { amount, member }: IPurgeArgs): Promise<void> {
+    const fetchedMsgs = await msg.channel.messages.fetch({ limit: 100 });
+
+    const originChannel = msg.channel as TextChannel;
+    const fourteenDaysAgo = dayjs().set('d', -14);
+    const dateFormatted = fourteenDaysAgo.format('MM/DD/YY');
+
+    const returnEmbed = (numMsg: number, member?: GuildMember): MessageEmbed => {
+      return makeSimpleEmbed(
+        `Purged **${numMsg} messages**` + member
+          ? ` from **${member}** `
+          : `since **${dateFormatted}**`
+      );
+    };
+
     if (member) {
-      const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
-      const filteredMsgs = fetchedMsg
+      const selectMsgs = fetchedMsgs
         .filter(
           (m: Message) =>
-            m.author.id === member.id && Date.now() - m.createdTimestamp < 1209600000
+            m.author.id === member.id && m.createdAt >= fourteenDaysAgo.toDate()
         )
         .array()
         .slice(0, amount);
-      return await (msg.channel as TextChannel).bulkDelete(filteredMsgs);
-      // No member arg
-    } else {
-      const fetchedMsg = await msg.channel.messages.fetch({ limit: 100 });
-      const filteredMsg = fetchedMsg.array().slice(0, amount);
-      return await (msg.channel as TextChannel).bulkDelete(filteredMsg);
+
+      await originChannel.bulkDelete(selectMsgs);
+
+      const embedMsg = await msg.channel.send(returnEmbed(selectMsgs.length, member));
+
+      await embedMsg.delete({
+        timeout: 3000,
+      });
     }
+
+    const selectMsgs = fetchedMsgs
+      .filter((m: Message) => m.createdAt >= fourteenDaysAgo.toDate())
+      .array()
+      .slice();
+
+    await originChannel.bulkDelete(selectMsgs);
+
+    const embedMsg = await msg.channel.send(returnEmbed(selectMsgs.length));
+
+    await embedMsg.delete({
+      timeout: 3000,
+    });
   }
 }

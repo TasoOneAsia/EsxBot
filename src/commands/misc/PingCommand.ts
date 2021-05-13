@@ -15,6 +15,7 @@ export default class PingCommand extends Command {
       },
       category: 'Misc',
       channel: 'guild',
+      typing: true,
     });
 
     this._logger = handler.client.log.getChildLogger({
