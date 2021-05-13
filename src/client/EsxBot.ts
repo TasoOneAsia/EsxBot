@@ -6,7 +6,6 @@ import { Connection } from 'typeorm';
 import { ManagerHandler } from '../structures/managers/ManagerHandler';
 import Database, { connectionName } from '../structures/Database';
 import {
-  DEFAULT_PREFIX,
   OWNER_IDS,
   LOG_TO_FILE,
   LOG_VERBOSITY,
@@ -52,39 +51,50 @@ export default class EsxBot extends AkairoClient {
 
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: path.join(__dirname, '..', 'commands'),
-    prefix: DEFAULT_PREFIX,
+    prefix: () => this.settings.get('prefix') || '!',
     allowMention: true,
     handleEdits: true,
+    storeMessages: true,
     commandUtil: true,
-    commandUtilLifetime: 3e5,
+    fetchMembers: true,
     defaultCooldown: DEFAULT_COOLDOWN,
     argumentDefaults: {
       prompt: {
+        modifyCancel: () => {
+          const embed = new MessageEmbed()
+            .setColor('RED')
+            .setDescription('Command cancelled!');
+          return { embed };
+        },
         modifyStart: (msg: Message, str: string): MessageOptions => {
           const embed = new MessageEmbed()
-            .setColor('RANDOM')
+            .setColor('GOLD')
             .setDescription(str)
             .setFooter(
-              `Type \`cancel\` to cancel the command or ${this.commandHandler.prefix}help [command]`,
+              `Type \`cancel\` to cancel the command or ${
+                this.commandHandler.client.settings.get('prefix') || '!'
+              }help [command]`,
               msg.author.displayAvatarURL()
             );
           return { embed };
         },
         modifyRetry: (msg: Message, str: string): MessageOptions => {
           const embed = new MessageEmbed()
-            .setColor('RANDOM')
+            .setColor('RED')
             .setDescription(str)
             .setFooter(
-              `Type \`cancel\` to cancel the command or ${this.commandHandler.prefix}help [command]`,
+              `Type \`cancel\` to cancel the command or ${
+                this.commandHandler.client.settings.get('prefix') || '!'
+              }help [command]`,
               msg.author.displayAvatarURL()
             );
           return { embed };
         },
-        timeout: () => makeSimpleEmbed(`Timed out!`),
+        timeout: () => makeSimpleEmbed(`Timed out!`, 'AQUA'),
         ended: (msg: Message) => {
           const embed = new MessageEmbed()
             .setDescription('You have reached the maximum retries')
-            .setColor('RED')
+            .setColor('BLUE')
             .setFooter('Project Error', msg.author.displayAvatarURL());
           return { embed };
         },
