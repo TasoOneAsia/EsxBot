@@ -44,17 +44,12 @@ export default class M8BCommand extends Command {
   }
 
   public async exec(msg: Message): Promise<Message | undefined> {
-    try {
-      const answer = replies[Math.floor(Math.random() * replies.length)];
-      const ques = msg.content.substring(msg.content.indexOf(' ') + 1);
-      const embed = new MessageEmbed()
-        .setTitle(`You asked: \`${ques}\``)
-        .setDescription(`:8ball: : \`${answer}\``)
-        .setColor('RANDOM');
-      return msg.util?.send(embed);
-    } catch (e) {
-      this._logger.error(e);
-      return msg.channel.send('');
-    }
+    const answer = replies[Math.floor(Math.random() * replies.length)];
+    const ques = msg.content.substring(msg.content.indexOf(' ') + 1);
+    const embed = new MessageEmbed()
+      .setTitle(`You asked: \`${ques}\``)
+      .setDescription(`:8ball: : \`${answer}\``)
+      .setColor('RANDOM');
+    return msg.util?.send(embed);
   }
 }
