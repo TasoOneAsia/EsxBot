@@ -1,12 +1,13 @@
 import { AkairoModule } from 'discord-akairo';
 
 interface IManagerOptions {
-  category: string;
+  category?: string;
+  categoryId?: string;
 }
 
 export class Manager extends AkairoModule {
-  constructor(id: string, { category }: IManagerOptions) {
-    super(id, { category });
+  constructor(id: string, options: IManagerOptions = {}) {
+    super(id, options);
   }
 
   public exec(): void {

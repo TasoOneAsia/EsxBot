@@ -1,6 +1,6 @@
 import { GuildSettingsJSON } from '../types';
 
-export const defaultSettingMap: GuildSettingsJSON = {
+export const defaultGuildSettings: GuildSettingsJSON = {
   prefix: '!',
   'admin-log-channel': null,
   'dev-role': null,
