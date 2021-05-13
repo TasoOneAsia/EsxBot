@@ -1,0 +1,5 @@
+{
+  "aliases": ["artifacts","fivemversion"],
+  "replyMsg": "FiveM/Citizen.fx release server build versions fairly regularly, called 'Artifacts'.\nYou can find your artifact version by typing `version` into your server console.\nThe last 4 digits displayed is your artifact version.\n**Artifacts Downloads (Windows):** <https://runtime.fivem.net/artifacts/fivem/build_server_windows/master/?>",
+  "description": "FiveM Artifacts"
+}
