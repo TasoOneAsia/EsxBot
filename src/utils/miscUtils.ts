@@ -24,7 +24,7 @@ export const makeSimpleEmbed = (
   msg: string,
   color: ColorResolvable = 'RANDOM'
 ): MessageEmbed => {
-  return new MessageEmbed().setTimestamp().setDescription(msg).setColor(color);
+  return new MessageEmbed().setDescription(msg).setColor(color);
 };
 
 export const parseTimeFromString = (str: string): number | null => {
