@@ -81,7 +81,7 @@ export default class HelpCommand extends Command {
               name: '**Examples**',
               value: command.description.examples
                 ? command.description.examples.map(
-                    (e: unknown) => `\`${this.client.commandHandler.prefix}${e}\``
+                    (e: unknown) => `\`${this.client.settings.get('prefix')}${e}\``
                   )
                 : 'No examples',
             },
@@ -94,7 +94,9 @@ export default class HelpCommand extends Command {
       .setColor('#ff8f00')
       .setFooter(message.author.tag, message.author.displayAvatarURL())
       .setDescription(
-        `*For further info on a command do \`${this.client.commandHandler.prefix}help [command]\`*`
+        `*For further info on a command do \`${this.client.settings.get(
+          'prefix'
+        )}help [command]\`*`
       )
       .setTimestamp();
 
