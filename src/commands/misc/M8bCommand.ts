@@ -1,28 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-const replies = [
-  `It is certain`,
-  `It is decidedly so`,
-  `Without a doubt`,
-  `Yes, definitely`,
-  `You may rely on it`,
-  `As I see it, yes`,
-  `Most likely`,
-  `Outlook good`,
-  `Signs point to yes`,
-  `Yes`,
-  `Reply hazy, try again`,
-  `Ask again later`,
-  `Better not tell you now`,
-  `Cannot predict now`,
-  `Concentrate and ask again`,
-  `Don't bet on it`,
-  `My reply is no`,
-  `My sources say no`,
-  `Outlook not so good`,
-  `Very doubtful`,
-];
+import { REPLIES } from '../../config';
 
 export default class M8BCommand extends Command {
   private readonly _logger: Logger;
@@ -44,7 +23,7 @@ export default class M8BCommand extends Command {
   }
 
   public async exec(msg: Message): Promise<Message | undefined> {
-    const answer = replies[Math.floor(Math.random() * replies.length)];
+    const answer = REPLIES[Math.floor(Math.random() * REPLIES.length)];
     const ques = msg.content.substring(msg.content.indexOf(' ') + 1);
     const embed = new MessageEmbed()
       .setTitle(`You asked: \`${ques}\``)
