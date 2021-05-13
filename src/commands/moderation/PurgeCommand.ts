@@ -59,10 +59,12 @@ export default class PurgeCommand extends Command {
     const dateFormatted = fourteenDaysAgo.format('MM/DD/YY');
 
     const returnEmbed = (numMsg: number, member?: GuildMember): MessageEmbed => {
+      // TODO: Can be done better but hotfix for now
       return makeSimpleEmbed(
-        `Purged **${numMsg} messages**` + member
-          ? ` from **${member}** `
-          : `since **${dateFormatted}**`
+        `Purged **${numMsg} messages** ` +
+          (member
+            ? `from **${member}** since **${dateFormatted}**`
+            : `since **${dateFormatted}**`)
       );
     };
 
@@ -87,7 +89,7 @@ export default class PurgeCommand extends Command {
     const selectMsgs = fetchedMsgs
       .filter((m: Message) => m.createdAt >= fourteenDaysAgo.toDate())
       .array()
-      .slice(0, amount);
+      .slice(0, amount + 1);
 
     await originChannel.bulkDelete(selectMsgs);
 
