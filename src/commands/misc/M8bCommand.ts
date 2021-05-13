@@ -1,8 +1,9 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { Command, CommandHandler } from 'discord-akairo';
+import { makeSimpleEmbed } from '../../utils';
 import { Logger } from 'tslog';
 import { REPLIES } from '../../config';
-
+import { IM8bArgs } from '../../types';
 export default class M8BCommand extends Command {
   private readonly _logger: Logger;
   constructor(handler: CommandHandler) {
@@ -14,6 +15,15 @@ export default class M8BCommand extends Command {
       },
       category: 'Misc',
       channel: 'guild',
+      args: [
+        {
+          prompt: {
+            retry: (msg: Message) => `${msg.author}, ask a question`,
+          },
+          id: 'question',
+          match: 'rest',
+        },
+      ],
     });
 
     this._logger = handler.client.log.getChildLogger({
@@ -21,14 +31,11 @@ export default class M8BCommand extends Command {
       prefix: ['[M8bCmd]'],
     });
   }
-
-  public async exec(msg: Message): Promise<Message | undefined> {
+  public async exec(msg: Message, { question }: IM8bArgs): Promise<Message | undefined> {
     const answer = REPLIES[Math.floor(Math.random() * REPLIES.length)];
-    const ques = msg.content.substring(msg.content.indexOf(' ') + 1);
-    const embed = new MessageEmbed()
-      .setTitle(`You asked: \`${ques}\``)
-      .setDescription(`:8ball: : \`${answer}\``)
-      .setColor('RANDOM');
+    const embed = makeSimpleEmbed(
+      `You asked: \`${question}\` \n :8ball: : \`${answer}\``
+    );
     return msg.channel.send(embed);
   }
 }
