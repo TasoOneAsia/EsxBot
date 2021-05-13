@@ -87,7 +87,7 @@ export default class PurgeCommand extends Command {
     const selectMsgs = fetchedMsgs
       .filter((m: Message) => m.createdAt >= fourteenDaysAgo.toDate())
       .array()
-      .slice();
+      .slice(0, amount);
 
     await originChannel.bulkDelete(selectMsgs);
 
