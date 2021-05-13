@@ -1,0 +1,5 @@
+{
+  "aliases": ["supporttemplate","temp"],
+  "replyMsg": "The person trying to help you is having difficulty understanding your issue.\nIf you would please fill out the <#808579448533549076> they might be able to understand your issue faster.",
+  "description": "Support Template"
+}
