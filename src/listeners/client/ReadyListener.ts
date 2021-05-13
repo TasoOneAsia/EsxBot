@@ -1,5 +1,4 @@
 import { Listener } from 'discord-akairo';
-import { TextChannel } from 'discord.js';
 
 export default class ReadyListener extends Listener {
   public constructor() {
@@ -16,15 +15,7 @@ export default class ReadyListener extends Listener {
     readyLog.info(`${this.client.user?.tag} is now online!`);
     //Sets Presence
     this.client.user?.setPresence({
-      activity: { type: 'WATCHING', name: 'over ESX Server' },
+      activity: { type: 'WATCHING', name: 'over the ESX Guild' },
     });
-    await this._setUpReactChannel();
-  }
-
-  private async _setUpReactChannel(): Promise<void> {
-    const channel = await (this.client.channels.cache.get(
-      <string>process.env.REACT_ROLE_CHANNEL
-    ) as TextChannel);
-    await channel.messages.fetch({ limit: 100 });
   }
 }

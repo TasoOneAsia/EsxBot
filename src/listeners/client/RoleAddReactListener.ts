@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
 
 export default class RoleAddReactListener extends Listener {
-  private readonly _logger: Logger;
+  private readonly log: Logger;
 
   constructor(handler: ListenerHandler) {
     super('reactRoleListener', {
@@ -12,30 +12,42 @@ export default class RoleAddReactListener extends Listener {
       emitter: 'client',
     });
 
-    this._logger = handler.client.log.getChildLogger({
+    this.log = handler.client.log.getChildLogger({
       name: 'RoleAddReactListener',
       prefix: ['[RoleAddReactListener]'],
     });
   }
 
   public async exec(reaction: MessageReaction, member: User): Promise<void> {
-    if (reaction.message.channel.id === process.env.REACT_ROLE_CHANNEL) {
+    const curReactChannel = this.client.settings.get('react-channel');
+
+    if (!curReactChannel) {
+      this.log.warn('No react-channel setting, aborting');
+      return;
+    }
+
+    if (reaction.message.channel.id === curReactChannel && !member.bot) {
       const guildMember = reaction.message.guild?.member(member);
 
-      const newbieRole = reaction.message.guild?.roles.cache.get(
-        <string>process.env.NEWBIE_ROLE_ID
-      );
-      const devRole = reaction.message.guild?.roles.cache.get(
-        <string>process.env.DEVELOPER_ROLE_ID
-      );
+      const newbieRoleId = this.client.settings.get('newbie-role');
+      const devRoleId = this.client.settings.get('dev-role');
+
+      if (!newbieRoleId || !devRoleId) {
+        this.log.warn('No newbie role or dev role in settings, aborting');
+        return;
+      }
+
+      const newbieRole = reaction.message.guild?.roles.cache.get(newbieRoleId);
+
+      const devRole = reaction.message.guild?.roles.cache.get(devRoleId);
 
       if (reaction.emoji.name === NEWBIE_ROLE_EMOTE && newbieRole) {
-        this._logger.debug(`Newbie role applied to ${member.username}`);
+        this.log.debug(`Newbie role applied to ${member.username}`);
         await guildMember?.roles.add(newbieRole);
       }
 
       if (reaction.emoji.name === DEVELOPER_ROLE_EMOTE && devRole) {
-        this._logger.debug(`Dev role applied to ${member.username}`);
+        this.log.debug(`Dev role applied to ${member.username}`);
         await guildMember?.roles.add(devRole);
       }
     }
