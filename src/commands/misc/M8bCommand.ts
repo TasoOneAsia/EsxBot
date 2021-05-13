@@ -3,7 +3,9 @@ import { Command, CommandHandler } from 'discord-akairo';
 import { makeSimpleEmbed } from '../../utils';
 import { Logger } from 'tslog';
 import { REPLIES } from '../../config';
-import { IM8bArgs } from '../../types';
+interface IM8bArgs {
+  question: string;
+}
 export default class M8BCommand extends Command {
   private readonly _logger: Logger;
   constructor(handler: CommandHandler) {
@@ -31,7 +33,7 @@ export default class M8BCommand extends Command {
       prefix: ['[M8bCmd]'],
     });
   }
-  public async exec(msg: Message, { question }: IM8bArgs): Promise<Message | undefined> {
+  public async exec(msg: Message, { question }: IM8bArgs): Promise<Message> {
     const answer = REPLIES[Math.floor(Math.random() * REPLIES.length)];
     const embed = makeSimpleEmbed(
       `You asked: \`${question}\` \n :8ball: : \`${answer}\``
