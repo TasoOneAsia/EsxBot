@@ -18,7 +18,7 @@ export class ManagerHandler extends AkairoHandler {
     }: IManagerHandlerOptions
   ) {
     if (!(classToHandle.prototype instanceof Manager || classToHandle === Manager)) {
-      client.log.error('FUCKING SHIT BROKE FUCKING SHIT');
+      throw new Error(`INVALID_CLASS_TO_HANDLE: ${classToHandle.name} ${Manager.name});`);
     }
 
     super(client, {
