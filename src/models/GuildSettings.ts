@@ -1,19 +1,16 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { GuildSettingsJSON } from '../types';
 
 @Entity()
 export default class GuildSettings {
   @PrimaryColumn({
     type: 'varchar',
-    length: 3,
-    default: '!',
-    nullable: false,
   })
-  prefix!: string;
+  config_set!: string;
 
   @Column({
-    type: 'varchar',
-    length: 64,
-    nullable: false,
+    type: 'jsonb',
+    default: (): string => "'{}'",
   })
-  logChannel!: string;
+  settings!: GuildSettingsJSON;
 }

@@ -4,6 +4,17 @@ import path from 'path';
  * Misc Bot Settings
  */
 
+export const GuildInteractSettings = [
+  'prefix',
+  'mod-log-channel',
+  'admin-log-channel',
+  'rules-channel',
+  'react-channel',
+  'dev-role',
+  'noob-role',
+  'mute-role',
+];
+
 // Bot Owner ID's
 export const OWNER_IDS = [
   '188181246600282113',

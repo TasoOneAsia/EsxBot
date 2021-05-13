@@ -17,6 +17,8 @@ import { Logger, ILogObject } from 'tslog';
 import path from 'path';
 import fs from 'fs';
 import { makeSimpleEmbed } from '../utils';
+import TypeORMProvider from '../structures/TypeORMProvider';
+import GuildSettings from '../models/GuildSettings';
 
 declare module 'discord-akairo' {
   interface AkairoClient {
@@ -26,6 +28,7 @@ declare module 'discord-akairo' {
     listenerHandler: ListenerHandler;
     managerHandler: ManagerHandler;
     _actions: Actions;
+    settings: TypeORMProvider;
   }
 }
 
@@ -44,6 +47,8 @@ export default class EsxBot extends AkairoClient {
   public managerHandler: ManagerHandler = new ManagerHandler(this, {
     directory: path.join(__dirname, '.', 'managers'),
   });
+
+  public settings!: TypeORMProvider;
 
   public commandHandler: CommandHandler = new CommandHandler(this, {
     directory: path.join(__dirname, '..', 'commands'),
@@ -150,6 +155,13 @@ export default class EsxBot extends AkairoClient {
     } catch (e) {
       this.log.error(e);
     }
+    this.log.info('Loading TypeORM Provider');
+
+    this.settings = new TypeORMProvider(this.db.getRepository(GuildSettings), this.log);
+    await this.settings.init();
+
+    this.log.info('Loading Command Handler');
+
     this.commandHandler.loadAll();
     this.log.info('Loading Listener Handler');
     this.listenerHandler.loadAll();
