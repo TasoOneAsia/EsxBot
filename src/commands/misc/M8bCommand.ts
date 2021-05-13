@@ -29,6 +29,6 @@ export default class M8BCommand extends Command {
       .setTitle(`You asked: \`${ques}\``)
       .setDescription(`:8ball: : \`${answer}\``)
       .setColor('RANDOM');
-    return msg.util?.send(embed);
+    return msg.channel.send(embed);
   }
 }
