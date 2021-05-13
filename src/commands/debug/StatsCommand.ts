@@ -3,8 +3,7 @@ import { Collection, GuildMember, Message, MessageEmbed } from 'discord.js';
 import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
 import CommandsRan from '../../models/CommandsRan';
-import { capitalize, discordCodeBlock } from '../../utils';
-import dayjs from 'dayjs';
+import { discordCodeBlock } from '../../utils';
 
 interface StatsCommandArgs {
   user: GuildMember | null;
@@ -20,6 +19,7 @@ export default class StatsCommand extends Command {
       category: 'Debug',
       aliases: ['cmd-stats', 'scmd'],
       ownerOnly: true,
+      typing: true,
       description: {
         content: 'Various statistics for commands ran',
         usage: 'cmd-stats [command] --user=[user]',

@@ -17,6 +17,7 @@ export default class StatusCommand extends Command {
         examples: ['status'],
       },
       channel: 'guild',
+      typing: true,
     });
 
     this._logger = handler.client.log.getChildLogger({

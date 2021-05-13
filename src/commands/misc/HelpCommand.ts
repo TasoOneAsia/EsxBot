@@ -11,6 +11,7 @@ export default class HelpCommand extends Command {
         usage: 'help [command]',
         examples: ['help', 'help ping'],
       },
+      typing: true,
       args: [
         {
           id: 'command',
