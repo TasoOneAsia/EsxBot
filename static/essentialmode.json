@@ -1,5 +1,5 @@
 {
   "aliases": ["essential"],
-  "replyMsg": "**You are running an outdated ESX version!**.\nEssentialmode was a requirement for ESX v1.1 and earlier\nThe latest versions of ESX do not require essentialmode.\nPlease view the <#828389272595595294> channel for more information.",
+  "replyMsg": "**You are running an outdated ESX version!**.\nEssentialmode was a requirement for ESX v1.1 and earlier\nThe latest versions of ESX do not require essentialmode.\nPlease view the pins in the <#843169077714354226> channel for more information.",
   "description": "Don't Run Essentialmode"
 }
