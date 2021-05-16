@@ -1,10 +1,9 @@
-import { Argument, ArgumentPromptData, Command, CommandHandler } from 'discord-akairo';
+import { Command, CommandHandler } from 'discord-akairo';
 import { Message, Role, TextChannel } from 'discord.js';
 import { Logger } from 'tslog';
 import { GuildInteractSettings } from '../../config';
 import { GuildSettingsJSON } from '../../types';
 import { makeSimpleEmbed } from '../../utils';
-import { guildSettingToTypeMap } from '../../structures/argumentTypeUtils';
 
 export type ResolvableSetSettingArgTypes = 'role' | 'textChannel' | 'string';
 
@@ -38,32 +37,22 @@ export default class SettingsCommandSet extends Command {
           type: GuildInteractSettings,
         },
         {
-          // TODO: Make this automatically cast
+          // TODO: Make this automatically cast and prompt
           id: 'value',
           prompt: {
-            start: (msg: Message) => {
-              // Lets parse the setting type ourselves using simple whitespace
-              const rawSplit: string[] = msg.cleanContent.split(' ');
-
-              const target =
-                (rawSplit[2] as keyof GuildSettingsJSON) ||
-                (rawSplit[0] as keyof GuildSettingsJSON);
-
-              const type = guildSettingToTypeMap[target] || 'Unknown';
-
-              return `The \`${target}\` setting can be this type: \`${type}\``;
-            },
-            retry: (msg: Message) => {
-              const rawSplit: string[] = msg.cleanContent.split(' ');
-
-              const target =
-                (rawSplit[2] as keyof GuildSettingsJSON) ||
-                (rawSplit[0] as keyof GuildSettingsJSON);
-
-              const type = guildSettingToTypeMap[target] || 'Unknown';
-
-              return `The \`${target}\` setting can be this type: \`${type}\``;
-            },
+            start: `You must pass a value`,
+            // retry: (msg: Message) => {
+            //   const rawSplit: string[] = msg.cleanContent.split(' ');
+            //
+            //   const target =
+            //     (rawSplit[2] as keyof GuildSettingsJSON) ||
+            //     (rawSplit[0] as keyof GuildSettingsJSON);
+            //
+            //   const type = guildSettingToTypeMap[target] || 'Unknown';
+            //
+            //   return `The \`${target}\` setting can be this type: \`${type}\``;
+            // },
+            retry: `You must pass a value`,
           },
         },
       ],
