@@ -6,6 +6,9 @@ export const discordCodeBlock = (str: string | number): string => {
   return `\`\`\`\n${str}\n\`\`\``;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = (): void => {};
+
 // Rounded to 3 decimals
 export const byteToGB = (bytes: number): string => {
   return (bytes / 1e9).toFixed(2);

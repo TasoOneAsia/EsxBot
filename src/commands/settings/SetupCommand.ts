@@ -1,8 +1,8 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE, RULES } from '../../config';
-import { stripIndent } from 'common-tags';
+import { RULES } from '../../config';
+import SetupRoleReactManager from '../../client/managers/SetupRoleReactManager';
 
 export default class SetupCommand extends Command {
   private _logger: Logger;
@@ -40,13 +40,12 @@ export default class SetupCommand extends Command {
   public async exec(msg: Message, { type }: { type: string }): Promise<void | Message> {
     switch (type) {
       case 'role':
-        await SetupCommand._setupRole(msg);
+        await this.setupRole(msg);
         break;
       case 'rules':
         await SetupCommand._setupRules(msg);
         break;
     }
-    msg.delete({ timeout: 3000 });
   }
 
   private static async _setupRules(msg: Message): Promise<Message> {
@@ -72,31 +71,16 @@ export default class SetupCommand extends Command {
     return msg.channel.send(success);
   }
 
-  private static async _setupRole(msg: Message): Promise<Message> {
-    const roleChannel = msg.guild?.channels.cache.get(
-      <string>process.env.REACT_ROLE_CHANNEL
-    ) as TextChannel;
+  private async setupRole(msg: Message): Promise<Message> {
+    const reactRoleManager = this.client.managerHandler.modules.get(
+      'role-react-manager'
+    ) as SetupRoleReactManager;
 
-    const embed = new MessageEmbed()
-      .setTitle('React with Your Level')
-      .setDescription(
-        stripIndent`
-        **Please react to this message with the emote you feel represents your skill**
+    // This will rerun the setupRole sequence based on the setting state
+    await reactRoleManager.ensureFreshEmbed();
 
-        **Newbie** ${NEWBIE_ROLE_EMOTE} - Newbie to ESX/FiveM without much prior knowledge.
-        **Developer** ${DEVELOPER_ROLE_EMOTE} - Well versed with ESX & FiveM and has the skills to develop for it.
-
-        *If you wish to switch roles just remove your previous reaction and add a new one*
-      `
-      )
-      .setFooter('From the ESX Org');
-
-    const sentMsg = await roleChannel.send(embed);
-    await sentMsg.react(NEWBIE_ROLE_EMOTE);
-    await sentMsg.react(DEVELOPER_ROLE_EMOTE);
-
-    const success = SetupCommand._makeSuccessEmbed('roles');
-    return msg.channel.send(success);
+    const embed = SetupCommand._makeSuccessEmbed('role');
+    return msg.channel.send(embed);
   }
 
   private static _makeSuccessEmbed(command: string): MessageEmbed {
