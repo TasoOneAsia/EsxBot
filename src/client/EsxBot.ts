@@ -29,6 +29,8 @@ declare module 'discord-akairo' {
   }
 }
 
+// chip did this
+
 export default class EsxBot extends AkairoClient {
   public db!: Connection;
 
