@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message } from 'discord.js';
 import { Command, CommandHandler } from 'discord-akairo';
 import { makeSimpleEmbed } from '../../utils';
 import { Logger } from 'tslog';
