@@ -16,14 +16,22 @@ export default class StatsCommand extends Command {
 
   public constructor(handler: CommandHandler) {
     super('cmd-stats', {
-      category: 'Debug',
+      category: 'Admin',
       aliases: ['cmd-stats', 'scmd'],
-      ownerOnly: true,
+      userPermissions: (msg: Message) => {
+        if (
+          !msg.member!.permissions.has('ADMINISTRATOR') &&
+          !handler.client.ownerID.includes(msg.member!.id)
+        ) {
+          return 'Admin or Owner';
+        }
+        return null;
+      },
       typing: true,
       description: {
         content: 'Various statistics for commands ran',
         usage: 'cmd-stats [command] --user=[user]',
-        examples: ['cmd-stats', 'cmd-stats curl https://tasoagc.dev'],
+        examples: ['cmd-stats', 'cmd-stats plume'],
       },
       args: [
         {
