@@ -1,5 +1,5 @@
 {
-  "aliases": ["np","nopixel","grp","grpcore","qbus","qbcore","leaks"],
+  "aliases": ["np", "nopixel", "grp", "grpcore", "qbus", "qbcore", "leaks"],
   "replyMsg": "**Leaks are not supported in this Discord!**.\nIf you download a paid resource for free, regardless of the location you found it, it is stolen.\nStolen resources are either shared by someone who paid for it, or are ripped from server files.\nBoth of which are against FiveM Terms of Service and can get your server and account banned.",
   "description": "Leaks Explanation"
 }

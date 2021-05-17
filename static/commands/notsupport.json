@@ -1,5 +1,5 @@
 {
-  "aliases": ["notsup","ns"],
+  "aliases": ["notsup", "ns"],
   "replyMsg": "**This is not a support channel.**\nUse the correct channel or you will be warned.",
   "description": "Use Support Channels"
 }

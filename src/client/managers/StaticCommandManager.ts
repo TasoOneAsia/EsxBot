@@ -5,6 +5,8 @@ import path from 'path';
 import StaticCommandBase, { StaticCommandFile } from '../../structures/StaticCommandBase';
 
 export default class StaticCommandManager extends Manager {
+  private basePath = path.join(process.cwd(), 'static', 'commands');
+
   private log = new Logger({
     name: 'StaticCmdManager',
     prefix: ['[StaticCmdManager]'],
@@ -17,18 +19,16 @@ export default class StaticCommandManager extends Manager {
   }
 
   public exec(): void {
-    const basePath = path.join(__dirname, '../../../static');
-
-    if (!fs.existsSync(basePath)) {
-      fs.mkdirSync(basePath);
+    if (!fs.existsSync(this.basePath)) {
+      fs.mkdirSync(this.basePath);
     }
 
-    const fileNames = fs.readdirSync(basePath);
+    const fileNames = fs.readdirSync(this.basePath);
 
     for (const file of fileNames) {
       try {
         const fileWithoutExt = file.replace(/\.[^/.]+$/, '');
-        const fileRawContent = fs.readFileSync(path.join(basePath, file), 'utf-8');
+        const fileRawContent = fs.readFileSync(path.join(this.basePath, file), 'utf-8');
         const decodeContent: StaticCommandFile = JSON.parse(fileRawContent);
         const staticCommand = new StaticCommandBase(fileWithoutExt, decodeContent);
         this.client.commandHandler.register(staticCommand);

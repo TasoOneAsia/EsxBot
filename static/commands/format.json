@@ -1,5 +1,5 @@
 {
-  "aliases": ["codeblock","code"],
+  "aliases": ["codeblock", "code"],
   "replyMsg": "You should format your code using the Discord codeblocks to make them more readable.\nCodeblocks add color formatting to your code to make it easier to understand.\nPlease reference this image to see how: https://i.imgur.com/Ro4JXTy.png",
   "description": "Codeblock Example, Image Embed Intentional"
 }
