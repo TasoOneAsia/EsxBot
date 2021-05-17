@@ -31,9 +31,10 @@ export class ManagerHandler extends AkairoHandler {
   }
 
   private setup() {
-    this.client.once('ready', () => {
-      for (const manager of this.modules.values()) {
-        (<Manager>manager).exec();
+    this.on('load', (mod) => {
+      const module = this.modules.get(mod.id) as Manager | undefined;
+      if (module) {
+        module.exec();
       }
     });
   }

@@ -3,18 +3,26 @@ import { Repository } from 'typeorm';
 import { setTimeout as setLongTimeout } from 'long-timeout'; // We have to use a retarded module because setTimeout has a maximum value of a 32bit signed integer
 import Infractions from '../../models/Infractions';
 import { AddBanData } from '../Actions';
+import { ManagerHandler } from '../../structures/managers/ManagerHandler';
+import { Logger } from 'tslog';
 export default class BanManager extends Manager {
-  private infractionsRepo!: Repository<Infractions>;
+  private infractionsRepo: Repository<Infractions>;
+  private log: Logger;
 
-  constructor() {
+  constructor(handler: ManagerHandler) {
     super('ban', {
       category: 'moderation',
     });
+
+    this.log = handler.client.log.getChildLogger({
+      name: 'BanManager',
+      prefix: ['[BanManager]'],
+    });
+
+    this.infractionsRepo = handler.client.db.getRepository(Infractions);
   }
 
   public exec(): void {
-    this.infractionsRepo = this.client.db.getRepository(Infractions);
-
     this.infractionsRepo.find({ infractionType: 'ban' }).then((allBans) => {
       allBans
         .filter((ban) => ban.unbanDate && ban.unbanDate * 1000 <= Date.now())

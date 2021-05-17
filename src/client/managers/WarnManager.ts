@@ -3,14 +3,17 @@ import { MoreThan, Repository } from 'typeorm';
 import Infractions from '../../models/Infractions';
 import { Manager } from '../../structures/managers/Manager';
 import dayjs from 'dayjs';
+import { ManagerHandler } from '../../structures/managers/ManagerHandler';
 
 export default class WarnManager extends Manager {
-  private infractionsRepo!: Repository<Infractions>;
+  private infractionsRepo: Repository<Infractions>;
 
-  constructor() {
+  constructor(handler: ManagerHandler) {
     super('warn', {
       category: 'moderation',
     });
+
+    this.infractionsRepo = handler.client.db.getRepository(Infractions);
   }
 
   public async add(member: GuildMember, staff: string, reason?: string): Promise<void> {
