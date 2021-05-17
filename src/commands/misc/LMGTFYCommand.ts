@@ -14,6 +14,12 @@ export default class LMGTFYCommand extends Command {
     super('lmgtfyCmd', {
       aliases: ['lmgtfy', 'google'],
       channel: 'guild',
+      category: 'Misc',
+      description: {
+        content: 'Googles that for you',
+        usage: 'lmgtfy <@member> <query>',
+        examples: ['lmgtfy @Taso how to code'],
+      },
       typing: true,
       args: [
         {
@@ -22,7 +28,7 @@ export default class LMGTFYCommand extends Command {
             start: `Provide the member to tag`,
             retry: `Invalid member`,
           },
-          type: 'member',
+          type: 'memberMention',
         },
         {
           id: 'query',
