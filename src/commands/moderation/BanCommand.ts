@@ -24,8 +24,8 @@ export default class BanCommand extends Command {
       aliases: ['ban'],
       description: {
         content: 'Ban a guild member',
-        usage: 'ban <user> [reason]',
-        examples: ['ban @Taso noob', 'ban 188181246600282113 noob'],
+        usage: 'ban <user> <time> [reason]',
+        examples: ['ban @Taso perma noob', 'ban 188181246600282113 7d noob'],
       },
       category: 'Moderation',
       userPermissions: ['BAN_MEMBERS'],
