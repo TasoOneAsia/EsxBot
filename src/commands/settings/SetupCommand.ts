@@ -1,9 +1,14 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { RULES } from '../../config';
 import SetupRoleReactManager from '../../client/managers/SetupRoleReactManager';
 import { makeSimpleEmbed } from '../../utils';
+import RulesManager from '../../client/managers/RulesManager';
+
+interface SetupCommandArgs {
+  type: 'role' | 'rules';
+  dry: boolean;
+}
 
 export default class SetupCommand extends Command {
   private log: Logger;
@@ -12,9 +17,9 @@ export default class SetupCommand extends Command {
       aliases: ['setup'],
       category: 'Admin',
       description: {
-        content: 'Setup Server',
-        usage: 'setup [type]',
-        examples: ['setup rules', 'setup role'],
+        content: 'Setup the server rules or roles reaction',
+        usage: 'setup <type> [--dry]',
+        examples: ['setup rules', 'setup role --dry'],
       },
       userPermissions: (msg: Message) => {
         if (
@@ -37,6 +42,11 @@ export default class SetupCommand extends Command {
               `${msg.author}, Please select a valid option for the \`setup\` command (\`rules\`, \`role\`)`,
           },
         },
+        {
+          id: 'dry',
+          flag: '--dry',
+          match: 'flag',
+        },
       ],
     });
 
@@ -46,19 +56,28 @@ export default class SetupCommand extends Command {
     });
   }
 
-  public async exec(msg: Message, { type }: { type: string }): Promise<void | Message> {
+  public async exec(
+    msg: Message,
+    { type, dry }: SetupCommandArgs
+  ): Promise<void | Message> {
     switch (type) {
       case 'role':
         await this.setupRole(msg);
         break;
       case 'rules':
-        await this.setupRules(msg);
+        await this.setupRules(msg, dry);
         break;
     }
   }
 
-  private async setupRules(msg: Message): Promise<Message> {
+  private async setupRules(msg: Message, dry: boolean): Promise<Message> {
     const rawChannelId = this.client.settings.get('rules-channel');
+
+    const rulesManager = this.client.managerHandler.modules.get(
+      'rulesManager'
+    ) as RulesManager;
+
+    const retrievedRules = await rulesManager.getRules();
 
     if (!rawChannelId) {
       return msg.channel.send(
@@ -66,7 +85,7 @@ export default class SetupCommand extends Command {
       );
     }
 
-    const roleChannel = msg.guild!.channels.cache.get(rawChannelId) as TextChannel;
+    const rulesChannel = msg.guild!.channels.cache.get(rawChannelId) as TextChannel;
 
     const embed = new MessageEmbed()
       .setThumbnail('https://avatars.githubusercontent.com/u/30593074?s=200&v=4')
@@ -76,13 +95,24 @@ export default class SetupCommand extends Command {
       .setTitle('Guild Rules')
       .setTimestamp();
 
-    for (const rule in RULES) {
-      embed.addField(`Rule ${parseInt(rule) + 1}`, RULES[rule], false);
+    for (const rule in retrievedRules) {
+      embed.addField(`Rule ${parseInt(rule) + 1}`, retrievedRules[rule], false);
     }
 
-    await roleChannel.send(embed);
+    if (dry) {
+      const dryEmbed = makeSimpleEmbed(
+        `The rules would have been sent to ${rulesChannel}`
+      );
+
+      await msg.channel.send(embed);
+
+      return msg.channel.send(dryEmbed);
+    }
+
+    await rulesChannel.send(embed);
 
     const success = SetupCommand._makeSuccessEmbed('rules');
+
     return msg.channel.send(success);
   }
 
