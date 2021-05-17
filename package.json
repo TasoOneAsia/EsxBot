@@ -20,7 +20,7 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "build": "tsc -b --force --pretty --verbose",
+    "build": "tsc -b --force --verbose",
     "format": "prettier --config .prettierrc ./src/**/*.ts  --write",
     "lint": "eslint ./src --ext .ts ",
     "dev": "nodemon ./src/index.ts",

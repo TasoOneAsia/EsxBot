@@ -1,7 +1,11 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { Message, MessageEmbed } from 'discord.js';
-import { convertNanoToMs, discordCodeBlock } from '../../utils';
+import { convertNanoToMs, discordCodeBlock, makeSimpleEmbed } from '../../utils';
+import { promisify } from 'util';
+import { exec } from 'child_process';
+
+const promiseExec = promisify(exec);
 
 type BotHandlers = 'manager' | 'listener' | 'command';
 
@@ -10,6 +14,11 @@ type BotHandleField = `${BotHandlers}Handler`;
 interface HandlerReturnData {
   size: number;
   time: number;
+}
+
+interface ReloadCommandArgs {
+  full: boolean;
+  debug: boolean;
 }
 
 type HandlerDataTuple = [HandlerReturnData, HandlerReturnData, HandlerReturnData];
@@ -22,13 +31,33 @@ export default class ReloadCommand extends Command {
       aliases: ['reload'],
       typing: true,
       channel: 'guild',
-      ownerOnly: true,
-      category: 'Debug',
+      userPermissions: (msg: Message) => {
+        if (
+          !msg.member!.permissions.has('ADMINISTRATOR') &&
+          !handler.client.ownerID.includes(msg.member!.id)
+        ) {
+          return 'Admin or Owner';
+        }
+        return null;
+      },
+      category: 'Admin',
       description: {
-        content: `Will restart the bot's process`,
-        usage: 'restart',
+        content: `Will reload the bot`,
+        usage: 'restart [--full, --debug]',
         examples: ['restart'],
       },
+      args: [
+        {
+          id: 'full',
+          match: 'flag',
+          flag: '--full',
+        },
+        {
+          id: 'debug',
+          match: 'flag',
+          flag: '--debug',
+        },
+      ],
     });
 
     this.log = handler.client.log.getChildLogger({
@@ -37,7 +66,12 @@ export default class ReloadCommand extends Command {
     });
   }
 
-  public async exec(msg: Message): Promise<Message> {
+  public async exec(msg: Message, { full, debug }: ReloadCommandArgs): Promise<Message> {
+    // Trigger pull and build
+    if (full) {
+      await this.pullAndBuild(msg, debug);
+    }
+
     const handlerReloadStartTime = process.hrtime.bigint();
 
     const cmdHandler = this.reloadHandler('command');
@@ -55,6 +89,38 @@ export default class ReloadCommand extends Command {
     return await msg.channel.send(embed);
   }
 
+  private async pullAndBuild(msg: Message, debug: boolean): Promise<void> {
+    const pullResp = await promiseExec('git pull');
+
+    const makeProgressEmbed = (msg: string): MessageEmbed =>
+      makeSimpleEmbed(msg, 'GREEN');
+
+    if (pullResp.stderr) {
+      this.log.error(pullResp.stderr);
+      throw new Error('Failed to pull');
+    }
+
+    if (debug) {
+      const codeBlockStdOut = discordCodeBlock(pullResp.stdout);
+      await msg.channel.send(codeBlockStdOut);
+    }
+
+    await msg.channel.send(makeProgressEmbed('Sucessfully pulled from GitHub'));
+
+    const buildResp = await promiseExec('yarn build');
+
+    if (buildResp.stderr) {
+      this.log.error(buildResp.stderr);
+      throw new Error('Failed to build');
+    }
+
+    if (debug) {
+      const codeBlockStdOut = discordCodeBlock(buildResp.stdout);
+      await msg.channel.send(codeBlockStdOut);
+    }
+
+    await msg.channel.send(makeProgressEmbed('Sucessfully built TypeScript'));
+  }
   private reloadHandler(handler: BotHandlers): HandlerReturnData {
     let handlerType: BotHandleField;
 
