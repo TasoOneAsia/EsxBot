@@ -90,7 +90,7 @@ export default class ReloadCommand extends Command {
   }
 
   private async pullAndBuild(msg: Message, debug: boolean): Promise<void> {
-    const pullResp = await promiseExec('git pull');
+    const pullResp = await promiseExec('git pull -q');
 
     const makeProgressEmbed = (msg: string): MessageEmbed =>
       makeSimpleEmbed(msg, 'GREEN');
