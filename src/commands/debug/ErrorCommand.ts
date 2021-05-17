@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 
-export default class StatusCommand extends Command {
+export default class ErrorCommand extends Command {
   constructor() {
     super('error', {
       aliases: ['error'],
