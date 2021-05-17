@@ -100,11 +100,25 @@ export default class ReloadCommand extends Command {
 
     await msg.channel.send(makeProgressEmbed('Sucessfully pulled from GitHub'));
 
+    const installResp = await promiseExec('yarn');
+
+    if (installResp.stderr) {
+      this.log.error(installResp.stderr);
+      throw new Error('Failed to install dependencies');
+    }
+
+    if (debug) {
+      const codeBlockStdOut = discordCodeBlock(installResp.stdout);
+      await msg.channel.send(codeBlockStdOut);
+    }
+
     const buildResp = await promiseExec('yarn build');
+
+    await msg.channel.send(makeProgressEmbed('Sucessfully installed dependencies'));
 
     if (buildResp.stderr) {
       this.log.error(buildResp.stderr);
-      throw new Error('Failed to build');
+      throw new Error('Failed to build TypeScript');
     }
 
     if (debug) {
