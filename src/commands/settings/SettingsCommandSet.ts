@@ -73,7 +73,7 @@ export default class SettingsCommandSet extends Command {
   ): Promise<Message> {
     const oldSetting = this.client.settings.get(setting);
 
-    // await this.client.settings.set(setting, value);
+    await this.client.settings.set(setting, value);
 
     const embed = makeSimpleEmbed(
       `Sucessfully changed from \`${oldSetting}\` to \`${value}\``,
