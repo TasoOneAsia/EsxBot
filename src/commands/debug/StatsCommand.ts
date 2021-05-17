@@ -4,6 +4,7 @@ import { Logger } from 'tslog';
 import { Repository } from 'typeorm';
 import CommandsRan from '../../models/CommandsRan';
 import { discordCodeBlock } from '../../utils';
+import { isAdminOrOwner } from '../../structures/permResolvers';
 
 interface StatsCommandArgs {
   user: GuildMember | null;
@@ -18,15 +19,7 @@ export default class StatsCommand extends Command {
     super('cmd-stats', {
       category: 'Admin',
       aliases: ['cmd-stats', 'scmd'],
-      userPermissions: (msg: Message) => {
-        if (
-          !msg.member!.permissions.has('ADMINISTRATOR') &&
-          !handler.client.ownerID.includes(msg.member!.id)
-        ) {
-          return 'Admin or Owner';
-        }
-        return null;
-      },
+      userPermissions: (msg: Message) => isAdminOrOwner(msg, handler),
       typing: true,
       description: {
         content: 'Various statistics for commands ran',

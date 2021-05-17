@@ -4,6 +4,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import { convertNanoToMs, discordCodeBlock, makeSimpleEmbed } from '../../utils';
 import { promisify } from 'util';
 import { exec } from 'child_process';
+import { isAdminOrOwner } from '../../structures/permResolvers';
 
 const promiseExec = promisify(exec);
 
@@ -31,15 +32,7 @@ export default class ReloadCommand extends Command {
       aliases: ['reload'],
       typing: true,
       channel: 'guild',
-      userPermissions: (msg: Message) => {
-        if (
-          !msg.member!.permissions.has('ADMINISTRATOR') &&
-          !handler.client.ownerID.includes(msg.member!.id)
-        ) {
-          return 'Admin or Owner';
-        }
-        return null;
-      },
+      userPermissions: (msg: Message) => isAdminOrOwner(msg, handler),
       category: 'Admin',
       description: {
         content: `Will reload the bot`,
