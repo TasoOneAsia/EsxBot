@@ -5,7 +5,7 @@ import { discordCodeBlock } from '../../utils/miscUtils';
 import { IGNORED_CHANNELS } from '../../config';
 
 export default class MessageDeleteListener extends Listener {
-  private _logger: Logger;
+  private log: Logger;
 
   public constructor(handler: ListenerHandler) {
     super('messageDelete', {
@@ -13,7 +13,7 @@ export default class MessageDeleteListener extends Listener {
       emitter: 'client',
       category: 'client',
     });
-    this._logger = handler.client.log.getChildLogger({
+    this.log = handler.client.log.getChildLogger({
       name: 'MessageDeleteLog',
     });
   }
@@ -25,12 +25,12 @@ export default class MessageDeleteListener extends Listener {
       if (channel === msg.channel.id) return;
     }
 
-    this._logger.info(
+    this.log.info(
       `Delete Event: ${msg.author.tag} (${msg.author.id}), Content: ${msg.content}, Channel: ${msg.channel}`
     );
 
     const embed = MessageDeleteListener._createMessageEmbed(msg);
-    return await this._sendToChannel(embed);
+    return await this.sendToLogChannel(embed);
   }
 
   private static _createMessageEmbed(msg: Message): MessageEmbed {
@@ -60,17 +60,20 @@ export default class MessageDeleteListener extends Listener {
       ]);
   }
 
-  private async _sendToChannel(embed: MessageEmbed) {
-    if (!process.env.LOG_CHANNEL_ID)
-      throw new Error('LOG_CHANNEL_ID Env variable not defined');
+  private async sendToLogChannel(embed: MessageEmbed) {
+    const rawLogChannel = this.client.settings.get('basic-log-channel');
 
-    const channel = this.client.channels.cache.get(
-      <string>process.env.LOG_CHANNEL_ID
-    ) as TextChannel;
+    if (!rawLogChannel) {
+      this.log.warn('Basic log channel not setup! Aborting!');
+      return;
+    }
+
+    const channel = this.client.channels.cache.get(rawLogChannel) as TextChannel;
+
     try {
       await channel.send(embed);
     } catch (e) {
-      this._logger.error(e);
+      this.log.error(e);
     }
   }
 }

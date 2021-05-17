@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
 
 export default class ReactRemoveRoleListener extends Listener {
-  private readonly _logger: Logger;
+  private readonly log: Logger;
 
   constructor(handler: ListenerHandler) {
     super('reactRoleRemoveListener', {
@@ -12,30 +12,41 @@ export default class ReactRemoveRoleListener extends Listener {
       emitter: 'client',
     });
 
-    this._logger = handler.client.log.getChildLogger({
+    this.log = handler.client.log.getChildLogger({
       name: 'RoleReactRemoveListener',
       prefix: ['[RoleReactRemoveListener]'],
     });
   }
 
   public async exec(reaction: MessageReaction, member: User): Promise<void> {
-    if (reaction.message.channel.id === process.env.REACT_ROLE_CHANNEL) {
+    const rawReactId = this.client.settings.get('react-channel');
+
+    if (!rawReactId) {
+      this.log.warn('React channel not setup yet! Aborting!');
+      return;
+    }
+
+    if (reaction.message.channel.id === rawReactId) {
+      const rawNewbieId = this.client.settings.get('newbie-role');
+      const rawDevId = this.client.settings.get('dev-role');
+
+      if (!rawNewbieId || !rawDevId) {
+        this.log.warn('Newbie Role or Dev Role not yet setup! Aborting!');
+        return;
+      }
+
       const guildMember = reaction.message.guild?.member(member);
 
-      const newbieRole = reaction.message.guild?.roles.cache.get(
-        <string>process.env.NEWBIE_ROLE_ID
-      );
-      const devRole = reaction.message.guild?.roles.cache.get(
-        <string>process.env.DEVELOPER_ROLE_ID
-      );
+      const newbieRole = reaction.message.guild?.roles.cache.get(rawNewbieId);
+      const devRole = reaction.message.guild?.roles.cache.get(rawDevId);
 
       if (reaction.emoji.name === NEWBIE_ROLE_EMOTE && newbieRole) {
-        this._logger.debug(`Newbie role removed from ${member.username}`);
+        this.log.debug(`Newbie role removed from ${member.username}`);
         await guildMember?.roles.remove(newbieRole);
       }
 
       if (reaction.emoji.name === DEVELOPER_ROLE_EMOTE && devRole) {
-        this._logger.debug(`Dev role removed from ${member.username}`);
+        this.log.debug(`Dev role removed from ${member.username}`);
         await guildMember?.roles.remove(devRole);
       }
     }
