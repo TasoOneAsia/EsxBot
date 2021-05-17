@@ -61,7 +61,10 @@ export default class HelpCommand extends Command {
 
       return message.channel.send(
         new MessageEmbed()
-          .setAuthor(`Command Help | For '${command}'`, message.author.displayAvatarURL())
+          .setAuthor(
+            `Command Help | For '${command.aliases[0]}'`,
+            message.author.displayAvatarURL()
+          )
           .setColor('#ff8f00')
           .setTimestamp()
           .setFooter(message.author.tag, message.author.displayAvatarURL())
