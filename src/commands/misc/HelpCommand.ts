@@ -11,7 +11,6 @@ export default class HelpCommand extends Command {
         usage: 'help [command]',
         examples: ['help', 'help ping'],
       },
-      typing: true,
       args: [
         {
           id: 'command',
@@ -29,6 +28,10 @@ export default class HelpCommand extends Command {
     const msgAuthor = await message.guild!.members.fetch(message.author.id);
 
     const isMod = msgAuthor.permissions.has('BAN_MEMBERS');
+
+    const isAdmin =
+      msgAuthor.permissions.has('ADMINISTRATOR') ||
+      this.client.ownerID.includes(message.author.id);
 
     if (command) {
       if (
@@ -106,13 +109,15 @@ export default class HelpCommand extends Command {
       if (category.id === 'Debug' && !this.client.ownerID.includes(message.author.id))
         continue;
 
-      if (!isMod && category.id === 'Moderation') continue;
+      if (category.id === 'Admin' && !isAdmin) continue;
+
+      if (category.id === 'Moderation' && !isMod) continue;
 
       embed.addField(
         category.id,
         category
           .filter((cmd) => cmd.aliases.length > 0)
-          .map((cmd) => `**\`${cmd}\`**`)
+          .map((cmd) => `**\`${cmd.aliases[0]}\`**`)
           .join(', ') || 'No commands for this category'
       );
     }

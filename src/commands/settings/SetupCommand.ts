@@ -3,19 +3,28 @@ import { Logger } from 'tslog';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { RULES } from '../../config';
 import SetupRoleReactManager from '../../client/managers/SetupRoleReactManager';
+import { makeSimpleEmbed } from '../../utils';
 
 export default class SetupCommand extends Command {
-  private _logger: Logger;
+  private log: Logger;
   constructor(handler: CommandHandler) {
     super('setup', {
       aliases: ['setup'],
-      category: 'Moderation',
+      category: 'Admin',
       description: {
         content: 'Setup Server',
         usage: 'setup [type]',
         examples: ['setup rules', 'setup role'],
       },
-      userPermissions: ['KICK_MEMBERS'],
+      userPermissions: (msg: Message) => {
+        if (
+          !msg.member!.permissions.has('ADMINISTRATOR') &&
+          !handler.client.ownerID.includes(msg.member!.id)
+        ) {
+          return 'Admin or Owner';
+        }
+        return null;
+      },
       channel: 'guild',
       args: [
         {
@@ -31,7 +40,7 @@ export default class SetupCommand extends Command {
       ],
     });
 
-    this._logger = handler.client.log.getChildLogger({
+    this.log = handler.client.log.getChildLogger({
       name: 'SetupCmd',
       prefix: ['[SetupCmd]'],
     });
@@ -43,15 +52,21 @@ export default class SetupCommand extends Command {
         await this.setupRole(msg);
         break;
       case 'rules':
-        await SetupCommand._setupRules(msg);
+        await this.setupRules(msg);
         break;
     }
   }
 
-  private static async _setupRules(msg: Message): Promise<Message> {
-    const roleChannel = msg.guild?.channels.cache.get(
-      <string>process.env.RULE_CHANNEL
-    ) as TextChannel;
+  private async setupRules(msg: Message): Promise<Message> {
+    const rawChannelId = this.client.settings.get('rules-channel');
+
+    if (!rawChannelId) {
+      return msg.channel.send(
+        makeSimpleEmbed('Rules channel has not yet been setup!', 'RED')
+      );
+    }
+
+    const roleChannel = msg.guild!.channels.cache.get(rawChannelId) as TextChannel;
 
     const embed = new MessageEmbed()
       .setThumbnail('https://avatars.githubusercontent.com/u/30593074?s=200&v=4')
