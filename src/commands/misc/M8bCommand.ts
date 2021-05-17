@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { Command, CommandHandler } from 'discord-akairo';
 import { makeSimpleEmbed } from '../../utils';
 import { Logger } from 'tslog';
-import { REPLIES } from '../../config';
+import { MagicEightBallResps } from '../../config';
 interface IM8bArgs {
   question: string;
 }
@@ -34,7 +34,8 @@ export default class M8BCommand extends Command {
     });
   }
   public async exec(msg: Message, { question }: IM8bArgs): Promise<Message> {
-    const answer = REPLIES[Math.floor(Math.random() * REPLIES.length)];
+    const answer =
+      MagicEightBallResps[Math.floor(Math.random() * MagicEightBallResps.length)];
     const embed = makeSimpleEmbed(
       `You asked: \`${question}\` \n :8ball: : \`${answer}\``
     );
