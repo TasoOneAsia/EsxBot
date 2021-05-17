@@ -29,6 +29,7 @@
     "db:sync-dry": "typeorm schema:log"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "common-tags": "^1.8.0",
     "dayjs": "^1.10.2",
     "discord-akairo": "github:1Computer1/discord-akairo",

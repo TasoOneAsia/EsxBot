@@ -15,6 +15,8 @@ export const GuildInteractSettings = [
   'mute-role',
 ];
 
+export const LatestCommandInterval = 10 * 60000;
+
 // Bot Owner ID's
 export const OWNER_IDS = [
   '188181246600282113',
