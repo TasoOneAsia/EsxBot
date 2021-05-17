@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { TypeOrmProviderEvents } from '../../structures/TypeORMProvider';
 import { GuildSettingsJSON } from '../../types';
 
