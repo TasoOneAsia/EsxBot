@@ -4,7 +4,7 @@ import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { GuildSettingsJSON } from '../types';
 import { defaultGuildSettings } from '../utils/constants';
 import { Logger } from 'tslog';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { noop } from '../utils';
 
 export enum TypeOrmProviderEvents {
