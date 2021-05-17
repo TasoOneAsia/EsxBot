@@ -18,11 +18,7 @@ export const GuildInteractSettings = [
 export const LatestCommandInterval = 10 * 60000;
 
 // Bot Owner ID's
-export const OWNER_IDS = [
-  '188181246600282113',
-  '292423857204363265',
-  '511108466056626188',
-];
+export const OWNER_IDS = ['121675094572531713'];
 
 export const IGNORED_CHANNELS = [
   '733029369324240987',
@@ -85,3 +81,5 @@ export const MagicEightBallResps = [
   `Outlook not so good`,
   `Very doubtful`,
 ];
+
+export const LockMaxRole = '843143167683461120';
