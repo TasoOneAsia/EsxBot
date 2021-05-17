@@ -12,7 +12,7 @@ export default class KickCommand extends Command {
 
   constructor(handler: CommandHandler) {
     super('kick', {
-      aliases: ['boot', 'kick'],
+      aliases: ['kick', 'boot'],
       category: 'Moderation',
       description: {
         content: 'Kick a member',
@@ -26,7 +26,7 @@ export default class KickCommand extends Command {
           id: 'member',
           type: 'member',
           prompt: {
-            start: (msg: Message) => `${msg.author}, provide a valid member to warn`,
+            start: (msg: Message) => `${msg.author}, provide a valid member to kick`,
             retry: (msg: Message) =>
               `${msg.author}, that member was not resolved. Please try again`,
           },
@@ -39,7 +39,8 @@ export default class KickCommand extends Command {
       ],
     });
     this._logger = handler.client.log.getChildLogger({
-      name: 'WarnCommandLogger',
+      name: 'KickCmdLogger',
+      prefix: ['[KickCmdLogger]'],
     });
   }
 
