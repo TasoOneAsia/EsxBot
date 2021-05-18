@@ -1,5 +1,5 @@
 {
   "aliases": ["patron"],
-  "replyMsg": "ESX v1 Support is now for Patreon Supporters only.\n**ESX Patreon:** <https://www.patreon.com/esx>",
+  "replyMsg": "This Discord is for the development of the ESX Framework, not support for using it. We are focused on moving onto ESX Reborn instead of supporting ESX Legacy. We do provide support in our free time to patrons.\n**ESX Patreon:** <https://www.patreon.com/esx>",
   "description": "Patreon Desc and Link"
 }
