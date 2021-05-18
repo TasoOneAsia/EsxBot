@@ -1,5 +1,5 @@
 {
-  "aliases": [],
-  "replyMsg": "**ESXv2 is a Work-in-Progress and is not ready for public use yet.**\nWe are not currently offering support for V2 until a public release is made.\nIf you have issues trying to use it, you probably shouldn't be using it.\n**Latest ESX2 Version**: <https://github.com/esx-framework/es_extended/tree/develop>\n**Current Progress On ESX2**: <https://app.gitkraken.com/glo/board/XyGBRrdtWgARfLBr>",
-  "description": "ESXv2 WIP Message and Gitkraken/Github Links"
+  "aliases": ["reborn", "v2"],
+  "replyMsg": "**ESX Reborn is a Work-in-Progress and is not ready for public use yet.**\nWe are not currently offering public support for ESX Reborn until a public release is made.\nIf you have issues trying to use it, you probably shouldn't be using it.\n**Latest ESX Reborn Version**: <https://github.com/esx-framework/esx-reborn>\n**Current Progress On ESX Reborn**: <https://app.gitkraken.com/glo/board/XyGBRrdtWgARfLBr>",
+  "description": "ESX Reborn WIP Message and Gitkraken/Github Links"
 }

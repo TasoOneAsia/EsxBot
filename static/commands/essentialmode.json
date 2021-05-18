@@ -1,5 +1,5 @@
 {
   "aliases": ["essential"],
-  "replyMsg": "**You are running an outdated ESX version!**.\nEssentialmode was a requirement for ESX v1.1 and earlier\nThe latest versions of ESX do not require essentialmode.\nPlease view the pins in the <#843169077714354226> channel for more information.",
+  "replyMsg": "Essentialmode is outdated, and a deprecated part of ESX. Please update your ESX Legacy version.\n**Latest ESX Legacy Version**: <https://github.com/esx-framework/es_extended/tree/legacy>",
   "description": "Don't Run Essentialmode"
 }
