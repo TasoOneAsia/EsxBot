@@ -1,6 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
 
 const OverwriteBackup = new Map();
@@ -40,12 +40,12 @@ export default class LockCommand extends Command {
       return LockCommand._sendErrorMessage(msg, 'Max role was not found!');
     }
 
+    const channel = msg.channel as TextChannel;
+    OverwriteBackup.set(msg.channel.id, channel.permissionOverwrites);
+
     msg.guild!.roles.cache.forEach((role) => {
       if (maxRole.position > role.position) {
-        if (msg.channel.type !== 'dm') {
-          OverwriteBackup.set(msg.channel.id, msg.channel.permissionOverwrites);
-          msg.channel.updateOverwrite(role, { SEND_MESSAGES: false });
-        }
+        channel.updateOverwrite(role, { SEND_MESSAGES: false });
       }
     });
 
