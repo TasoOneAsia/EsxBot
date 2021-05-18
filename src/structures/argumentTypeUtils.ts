@@ -29,6 +29,8 @@ export const setSettingsCommandTypeCaster = (
       return 'role';
     case 'rules-channel':
       return 'textChannel';
+    case 'lock-role':
+      return 'role';
   }
 };
 
@@ -45,4 +47,5 @@ export const guildSettingToTypeMap: GuildSettingToTypeMap = {
   'react-channel': 'TextChannel (ID or mention)',
   'dev-role': 'Role (ID or mention)',
   'rules-channel': 'TextChannel (ID or mention)',
+  'lock-role': 'Role (ID or mention)',
 };

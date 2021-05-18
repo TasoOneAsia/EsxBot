@@ -9,4 +9,5 @@ export const defaultGuildSettings: GuildSettingsJSON = {
   'newbie-role': null,
   'react-channel': null,
   'rules-channel': null,
+  'lock-role': null,
 };

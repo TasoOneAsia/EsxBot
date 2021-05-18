@@ -85,5 +85,3 @@ export const MagicEightBallResps = [
   `Outlook not so good`,
   `Very doubtful`,
 ];
-
-export const LockMaxRole = '843143167683461120';

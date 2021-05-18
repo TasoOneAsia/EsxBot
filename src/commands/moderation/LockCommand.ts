@@ -2,7 +2,9 @@ import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { Message } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
-import { LockMaxRole } from '../../config';
+
+const OverwriteBackup = new Map();
+export { OverwriteBackup };
 
 export default class LockCommand extends Command {
   private _logger: Logger;
@@ -18,7 +20,6 @@ export default class LockCommand extends Command {
       category: 'Moderation',
       userPermissions: 'KICK_MEMBERS',
       channel: 'guild',
-      args: [],
     });
     this._logger = handler.client.log.getChildLogger({
       name: 'LockCmd',
@@ -27,15 +28,22 @@ export default class LockCommand extends Command {
   }
 
   public async exec(msg: Message): Promise<Message> {
-    const maxRole = msg.guild!.roles.cache.get(LockMaxRole);
+    const lockRole = this.client.settings.get('lock-role');
 
-    if (maxRole === undefined) {
+    if (!lockRole) {
+      return LockCommand._sendErrorMessage(msg, 'lock-role setting must be set!');
+    }
+
+    const maxRole = msg.guild!.roles.cache.get(lockRole);
+
+    if (!maxRole) {
       return LockCommand._sendErrorMessage(msg, 'Max role was not found!');
     }
 
     msg.guild!.roles.cache.forEach((role) => {
       if (maxRole.position > role.position) {
         if (msg.channel.type !== 'dm') {
+          OverwriteBackup.set(msg.channel.id, msg.channel.permissionOverwrites);
           msg.channel.updateOverwrite(role, { SEND_MESSAGES: false });
         }
       }
