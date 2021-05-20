@@ -1,5 +1,5 @@
 {
   "aliases": ["notsup", "ns"],
-  "replyMsg": "**This is not a support channel.**\nUse the correct channel or you will be warned.",
+  "replyMsg": "**We do not provide public support in this Discord.**\nYou will be warned and/or muted if you ask for support of any kind.\nIf you just want support, please use one of the many support communities for ESX.\nWe are focused on the official development here.",
   "description": "Use Support Channels"
 }
