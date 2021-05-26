@@ -1,5 +1,5 @@
 {
-    "aliases": ["support"],
-    "replyMsg": "This Discord is specifically for the development of ESX Framework. We do not offer public support for installation/errors. We do however provide support **as a courtesy** to Patrons when we have time.\n**ESX Patreon**: <https://www.patreon.com/esx>\n**ESX Docs and Installation Instructions**: <https://esx-framework.github.io/es_extended/>",
-    "description": "No Support"
+  "aliases": [],
+  "replyMsg": "This Discord is specifically for the development of ESX Framework. We do not offer public support for installation/errors. We do however provide support **as a courtesy** to Patrons when we have time.\n**ESX Patreon**: <https://www.patreon.com/esx>\n**ESX Docs and Installation Instructions**: <https://esx-framework.github.io/es_extended/>",
+  "description": "No Support"
 }
