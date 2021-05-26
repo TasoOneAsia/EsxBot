@@ -1,6 +1,6 @@
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
 import { OverwriteBackup } from './LockCommand';
 import { isAdminOrOwner } from '../../structures/permResolvers';
@@ -31,10 +31,9 @@ export default class UnlockCommand extends Command {
       return UnlockCommand._sendErrorMessage(msg, 'Channel is not locked!');
     }
 
-    if (msg.channel.type !== 'dm') {
-      msg.channel.overwritePermissions(OverwriteBackup.get(msg.channel.id));
-      OverwriteBackup.delete(msg.channel.id);
-    }
+    const channel = msg.channel as TextChannel;
+    channel.overwritePermissions(OverwriteBackup.get(msg.channel.id));
+    OverwriteBackup.delete(msg.channel.id);
 
     return msg.channel.send(makeSimpleEmbed(`Channel is now unlocked!`));
   }
