@@ -28,6 +28,7 @@ declare module 'discord-akairo' {
     managerHandler: ManagerHandler;
     _actions: Actions;
     settings: TypeORMProvider;
+    isReady: boolean;
   }
 }
 
@@ -38,6 +39,8 @@ export default class EsxBot extends AkairoClient {
     name: 'Init',
     displayLoggerName: true,
   });
+
+  public isReady = false;
 
   public listenerHandler: ListenerHandler = new ListenerHandler(this, {
     directory: path.join(__dirname, '..', 'listeners'),
