@@ -79,27 +79,20 @@ export default class PollCommand extends Command {
       answers += `${reactions[i]}  ${options![i]}\n`;
     }
 
+    const name = msg.guild!.member(msg.author)?.displayName || msg.author.tag;
+
     const msgEmbed = new MessageEmbed()
-      .setTitle('ESX Poll')
+      .setAuthor(`${name} asked`, msg.author.displayAvatarURL())
       .setColor('#1E90FF')
-      .setThumbnail(<string>msg.guild?.iconURL())
-      .addFields([
-        {
-          name: 'Question',
-          value: question,
-          inline: false,
-        },
-        {
-          name: 'Options',
-          value: answers,
-          inline: false,
-        },
-      ]);
+      .setTitle(question)
+      .setDescription(answers)
+      .setFooter('Poll was created')
+      .setTimestamp();
 
     const message = await msg.channel.send(msgEmbed);
 
     for (let i = 0; i < options!.length; i++) {
-      message.react(reactions[i]);
+      await message.react(reactions[i]);
     }
   }
 }
