@@ -37,6 +37,13 @@ export class ManagerHandler extends AkairoHandler {
         module.exec();
       }
     });
+
+    this.client.on('ready', () => {
+      const modules = this.modules.values() as IterableIterator<Manager>;
+      for (const module of modules) {
+        module.onReady();
+      }
+    });
   }
 
   register(manager: Manager, filepath: string): Manager {
