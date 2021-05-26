@@ -16,6 +16,7 @@ export interface SettingsCommandArgs {
   newbieRole: Role;
   devRole: Role;
   muteRole: Role;
+  lockRole: Role;
 }
 
 export default class SettingsCommandInit extends Command {
@@ -160,6 +161,18 @@ export default class SettingsCommandInit extends Command {
       },
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const lockRole: Role = yield {
+      type: 'role',
+      prompt: {
+        timeout: 0,
+        start: () =>
+          `Which role would you like to assign for the maximum lock role handling?`,
+        retry: (msg: Message) => `${msg.author}, this is an invalid role try again`,
+      },
+    };
+
     const mapArgsToJSON: GuildSettingsJSON = {
       prefix,
       'basic-log-channel': basicLogChannel.id,
@@ -169,6 +182,7 @@ export default class SettingsCommandInit extends Command {
       'dev-role': devRole.id,
       'newbie-role': newbieRole.id,
       'mute-role': muteRole.id,
+      'lock-role': lockRole.id,
     };
 
     const confirmOptions = yield {
@@ -200,6 +214,7 @@ export default class SettingsCommandInit extends Command {
       newbieRole,
       muteRole,
       devRole,
+      lockRole,
     };
   }
 
@@ -213,6 +228,7 @@ export default class SettingsCommandInit extends Command {
       muteRole,
       devRole,
       newbieRole,
+      lockRole,
       prefix,
     }: SettingsCommandArgs
   ): Promise<Message | void> {
@@ -225,6 +241,7 @@ export default class SettingsCommandInit extends Command {
       'dev-role': devRole.id,
       'newbie-role': newbieRole.id,
       'mute-role': muteRole.id,
+      'lock-role': lockRole.id,
     };
 
     await this.client.settings.setAll(mapArgsToJSON);

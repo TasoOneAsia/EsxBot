@@ -14,4 +14,5 @@ export interface GuildSettingsJSON {
   'dev-role': string | null;
   'newbie-role': string | null;
   'mute-role': string | null;
+  'lock-role': string | null;
 }
