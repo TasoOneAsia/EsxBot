@@ -17,5 +17,7 @@ export default class ReadyListener extends Listener {
     this.client.user?.setPresence({
       activity: { type: 'WATCHING', name: 'over the ESX Guild' },
     });
+
+    this.client.isReady = true;
   }
 }

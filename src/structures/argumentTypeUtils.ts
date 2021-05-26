@@ -21,8 +21,6 @@ export const setSettingsCommandTypeCaster = (
       return 'textChannel';
     case 'basic-log-channel':
       return 'textChannel';
-    case 'newbie-role':
-      return 'role';
     case 'mute-role':
       return 'role';
     case 'dev-role':
@@ -42,7 +40,6 @@ export const guildSettingToTypeMap: GuildSettingToTypeMap = {
   prefix: 'String (Not more than 4 Chars)',
   'mute-role': 'Role (ID or mention)',
   'basic-log-channel': 'TextChannel (ID or mention)',
-  'newbie-role': 'Role (ID or mention)',
   'admin-log-channel': 'TextChannel (ID or mention)',
   'react-channel': 'TextChannel (ID or mention)',
   'dev-role': 'Role (ID or mention)',

@@ -13,7 +13,6 @@ export interface SettingsCommandArgs {
   adminLogChannel: TextChannel;
   rulesChannel: TextChannel;
   reactChannel: TextChannel;
-  newbieRole: Role;
   devRole: Role;
   muteRole: Role;
   lockRole: Role;
@@ -130,17 +129,6 @@ export default class SettingsCommandInit extends Command {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const newbieRole: Role = yield {
-      type: 'role',
-      prompt: {
-        timeout: 0,
-        start: () => `Which role would you like to assign for the newbie role handling?`,
-        retry: (msg: Message) => `${msg.author}, this is an invalid role try again`,
-      },
-    };
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const devRole: Role = yield {
       type: 'role',
       prompt: {
@@ -180,7 +168,6 @@ export default class SettingsCommandInit extends Command {
       'rules-channel': rulesChannel.id,
       'react-channel': reactChannel.id,
       'dev-role': devRole.id,
-      'newbie-role': newbieRole.id,
       'mute-role': muteRole.id,
       'lock-role': lockRole.id,
     };
@@ -211,7 +198,6 @@ export default class SettingsCommandInit extends Command {
       adminLogChannel,
       rulesChannel,
       reactChannel,
-      newbieRole,
       muteRole,
       devRole,
       lockRole,
@@ -227,7 +213,6 @@ export default class SettingsCommandInit extends Command {
       reactChannel,
       muteRole,
       devRole,
-      newbieRole,
       lockRole,
       prefix,
     }: SettingsCommandArgs
@@ -239,10 +224,11 @@ export default class SettingsCommandInit extends Command {
       'rules-channel': rulesChannel.id,
       'react-channel': reactChannel.id,
       'dev-role': devRole.id,
-      'newbie-role': newbieRole.id,
       'mute-role': muteRole.id,
       'lock-role': lockRole.id,
     };
+
+    this.log.silly('Init Data Resolved', mapArgsToJSON);
 
     await this.client.settings.setAll(mapArgsToJSON);
 

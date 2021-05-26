@@ -13,9 +13,13 @@ export const GuildInteractSettings = [
   'dev-role',
   'noob-role',
   'mute-role',
+  'lock-role',
 ];
 
 export const LatestCommandInterval = 10 * 60000;
+
+export const FallbackGuildThumbnail =
+  'https://avatars.githubusercontent.com/u/30593074?s=200&v=4';
 
 // Bot Owner ID's
 export const OWNER_IDS = [
@@ -31,10 +35,7 @@ export const IGNORED_CHANNELS = [
 ];
 
 // The react emoji for the `newbie` role
-export const NEWBIE_ROLE_EMOTE = '🤯';
-
-// The react emoji for the `developer` role
-export const DEVELOPER_ROLE_EMOTE = '😀';
+export const ACKNOWLEDGE_REACT_EMOTE = '👍';
 
 /*
  * Logging Config Options

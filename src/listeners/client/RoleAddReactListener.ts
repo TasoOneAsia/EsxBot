@@ -1,7 +1,7 @@
 import { Listener, ListenerHandler } from 'discord-akairo';
 import { MessageReaction, User } from 'discord.js';
 import { Logger } from 'tslog';
-import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
+import { ACKNOWLEDGE_REACT_EMOTE } from '../../config';
 
 export default class RoleAddReactListener extends Listener {
   private readonly log: Logger;
@@ -29,24 +29,16 @@ export default class RoleAddReactListener extends Listener {
     if (reaction.message.channel.id === curReactChannel && !member.bot) {
       const guildMember = reaction.message.guild?.member(member);
 
-      const newbieRoleId = this.client.settings.get('newbie-role');
       const devRoleId = this.client.settings.get('dev-role');
 
-      if (!newbieRoleId || !devRoleId) {
-        this.log.warn('No newbie role or dev role in settings, aborting');
+      if (!devRoleId) {
+        this.log.warn('No dev role in settings, aborting');
         return;
       }
 
-      const newbieRole = reaction.message.guild?.roles.cache.get(newbieRoleId);
-
       const devRole = reaction.message.guild?.roles.cache.get(devRoleId);
 
-      if (reaction.emoji.name === NEWBIE_ROLE_EMOTE && newbieRole) {
-        this.log.debug(`Newbie role applied to ${member.username}`);
-        await guildMember?.roles.add(newbieRole);
-      }
-
-      if (reaction.emoji.name === DEVELOPER_ROLE_EMOTE && devRole) {
+      if (reaction.emoji.name === ACKNOWLEDGE_REACT_EMOTE && devRole) {
         this.log.debug(`Dev role applied to ${member.username}`);
         await guildMember?.roles.add(devRole);
       }

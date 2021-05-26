@@ -6,7 +6,6 @@ export const defaultGuildSettings: GuildSettingsJSON = {
   'dev-role': null,
   'basic-log-channel': null,
   'mute-role': null,
-  'newbie-role': null,
   'react-channel': null,
   'rules-channel': null,
   'lock-role': null,

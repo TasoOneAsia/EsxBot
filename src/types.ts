@@ -12,7 +12,6 @@ export interface GuildSettingsJSON {
   'rules-channel': string | null;
   'react-channel': string | null;
   'dev-role': string | null;
-  'newbie-role': string | null;
   'mute-role': string | null;
   'lock-role': string | null;
 }

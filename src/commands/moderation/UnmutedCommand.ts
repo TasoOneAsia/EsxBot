@@ -27,16 +27,6 @@ export default class MuteCommand extends Command {
               `${msg.author}, that member was not resolved. Please try again`,
           },
         },
-        {
-          id: 'role',
-          type: ['newbie', 'developer'],
-          match: 'rest',
-          prompt: {
-            start: (msg: Message) =>
-              `${msg.author}, please provide a valid role to set (newbie, developer)`,
-            retry: (msg: Message) => `${msg.author}, invalid role (newbie, developer)`,
-          },
-        },
       ],
     });
     this._logger = handler.client.log.getChildLogger({
@@ -45,11 +35,8 @@ export default class MuteCommand extends Command {
     });
   }
 
-  public async exec(
-    msg: Message,
-    { member, role }: { member: GuildMember; role: 'newbie' | 'developer' }
-  ): Promise<Message> {
-    await this.client._actions.unmuteUser(member, role);
+  public async exec(msg: Message, { member }: { member: GuildMember }): Promise<Message> {
+    await this.client._actions.unmuteUser(member);
 
     return msg.channel.send(makeSimpleEmbed(`${member} was unmuted!`));
   }

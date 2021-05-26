@@ -1,18 +1,20 @@
 import { Manager } from '../../structures/managers/Manager';
 import { ManagerHandler } from '../../structures/managers/ManagerHandler';
 import { Logger } from 'tslog';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Guild, Message, MessageEmbed, TextChannel } from 'discord.js';
 import { stripIndent } from 'common-tags';
-import { DEVELOPER_ROLE_EMOTE, NEWBIE_ROLE_EMOTE } from '../../config';
+import { ACKNOWLEDGE_REACT_EMOTE } from '../../config';
 import { EventEmitter } from 'events';
 import { TypeOrmProviderEvents } from '../../structures/TypeORMProvider';
 import { GuildSettingsJSON } from '../../types';
+import { getGuildIcon } from '../../utils';
 
 export default class SetupRoleReactManager extends Manager {
   private readonly log: Logger;
   private currentChannel: TextChannel | null = null;
-  private readonly embedTitleText = 'React with Your Level';
+  private readonly embedTitleText = `I've acknowledged the rules!`;
   private readonly settingsEmitter: EventEmitter;
+  private guildObj: Guild | null = null;
 
   constructor(handler: ManagerHandler) {
     super('role-react-manager', {
@@ -28,8 +30,21 @@ export default class SetupRoleReactManager extends Manager {
   }
 
   public async exec(): Promise<void> {
+    if (!this.client.isReady) return;
+    await this.setupChannels();
+  }
+
+  public async onReady(): Promise<void> {
+    await this.setupChannels();
+  }
+
+  private async setupChannels() {
+    if (!this.client.isReady) return;
+
     this.registerEmitterHandlers();
     const reactChannel = this.client.settings.get('react-channel');
+
+    this.log.debug(reactChannel);
 
     if (!reactChannel) {
       this.log.warn('React channel not setup yet! Aborting!');
@@ -52,7 +67,7 @@ export default class SetupRoleReactManager extends Manager {
     this.settingsEmitter.on(
       TypeOrmProviderEvents.SettingChanged,
       // Who knows if i need this old value rn
-      (key: keyof GuildSettingsJSON, oldValue: unknown) => {
+      (key: keyof GuildSettingsJSON) => {
         if (key === 'react-channel') {
           this.ensureFreshEmbed().catch((e) =>
             this.log.error(
@@ -105,8 +120,7 @@ export default class SetupRoleReactManager extends Manager {
     const sendEmbed = this.getReactRoleEmbed();
     const msg = await this.currentChannel.send(sendEmbed);
 
-    await msg.react(NEWBIE_ROLE_EMOTE);
-    await msg.react(DEVELOPER_ROLE_EMOTE);
+    await msg.react(ACKNOWLEDGE_REACT_EMOTE);
 
     this.log.info('Sent react role embed sucessfully!');
   }
@@ -114,25 +128,28 @@ export default class SetupRoleReactManager extends Manager {
   private getReactRoleEmbed(): MessageEmbed {
     return new MessageEmbed()
       .setTitle(this.embedTitleText)
+      .setColor('GOLD')
+      .setThumbnail(getGuildIcon(this.guildObj!))
       .setDescription(
         stripIndent`
-        **Please react to this message with the emote you feel represents your skill**
-
-        **Newbie** ${NEWBIE_ROLE_EMOTE} - Newbie to ESX/FiveM without much prior knowledge.
-        **Developer** ${DEVELOPER_ROLE_EMOTE} - Well versed with ESX & FiveM and has the skills to develop for it.
-
-        *If you wish to switch roles just remove your previous reaction and add a new one*
+        *Please react to this message with ${ACKNOWLEDGE_REACT_EMOTE} after you have acknowledged the rules*
+      
+        *You should receive the \`Developer\` role afterwards, and you will gain access to the rest of the guild*
       `
       )
-      .setFooter('From the ESX Org');
+      .setFooter('A message from the ESX Org');
   }
 
   private async cacheReactChannel(reactChannel: string): Promise<void> {
-    const channelFromCache = this.client.channels.cache.get(reactChannel) as TextChannel;
+    const channelFromCache = (await this.client.channels.fetch(
+      reactChannel
+    )) as TextChannel;
 
     if (!channelFromCache) throw new Error('Unable to find that channel in cache');
 
     this.currentChannel = channelFromCache;
+
+    this.guildObj = channelFromCache.guild;
 
     await channelFromCache.messages.fetch({
       limit: 50,

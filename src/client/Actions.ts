@@ -126,24 +126,18 @@ export class Actions {
     }
   }
 
-  unmuteUser(member: GuildMember, role: 'newbie' | 'developer'): void {
-    const devRole = <Role>(
-      member.guild.roles.cache.get(<string>process.env.DEVELOPER_ROLE_ID)
-    );
-    const newbieRole = <Role>(
-      member.guild.roles.cache.get(<string>process.env.NEWBIE_ROLE_ID)
-    );
+  unmuteUser(member: GuildMember): void {
+    const devRoleRaw = this.client.settings.get('dev-role');
 
-    if (role === 'newbie') {
-      member.roles
-        .set([newbieRole])
-        .catch((e) => this.log.error('Unable to set role to newbie', e));
+    if (!devRoleRaw) {
+      this.log.warn('Dev role not set! Aborting unmute');
+      return;
     }
 
-    if (role === 'developer') {
-      member.roles
-        .set([devRole])
-        .catch((e) => this.log.error('Unable to set role to developer', e));
-    }
+    const devRole = <Role>member.guild.roles.cache.get(devRoleRaw);
+
+    member.roles
+      .set([devRole])
+      .catch((e) => this.log.error('Unable to set role to developer', e));
   }
 }

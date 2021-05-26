@@ -1,6 +1,7 @@
 // FIXME: Types suck here, will improve after functionality
-import { ColorResolvable, MessageEmbed } from 'discord.js';
+import { ColorResolvable, Guild, MessageEmbed } from 'discord.js';
 import { cleanStack } from './cleanStack';
+import { FallbackGuildThumbnail } from '../config';
 
 export const discordCodeBlock = (str: string | number): string => {
   return `\`\`\`\n${str}\n\`\`\``;
@@ -8,6 +9,9 @@ export const discordCodeBlock = (str: string | number): string => {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = (): void => {};
+
+export const getGuildIcon = (guild: Guild): string =>
+  guild.iconURL() || FallbackGuildThumbnail;
 
 // Rounded to 3 decimals
 export const byteToGB = (bytes: number): string => {
