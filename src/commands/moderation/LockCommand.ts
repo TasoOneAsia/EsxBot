@@ -2,6 +2,7 @@ import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
 import { Message, TextChannel } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
+import { isAdminOrOwner } from '../../structures/permResolvers';
 
 const OverwriteBackup = new Map();
 export { OverwriteBackup };
@@ -17,9 +18,9 @@ export default class LockCommand extends Command {
         usage: 'lock',
         examples: ['lock'],
       },
-      category: 'Moderation',
-      userPermissions: 'KICK_MEMBERS',
       channel: 'guild',
+      userPermissions: (msg: Message) => isAdminOrOwner(msg, handler),
+      category: 'Admin',
     });
     this._logger = handler.client.log.getChildLogger({
       name: 'LockCmd',

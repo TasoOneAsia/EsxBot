@@ -3,6 +3,7 @@ import { Logger } from 'tslog';
 import { Message } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
 import { OverwriteBackup } from './LockCommand';
+import { isAdminOrOwner } from '../../structures/permResolvers';
 
 export default class UnlockCommand extends Command {
   private _logger: Logger;
@@ -15,9 +16,9 @@ export default class UnlockCommand extends Command {
         usage: 'unlock',
         examples: ['unlock'],
       },
-      category: 'Moderation',
-      userPermissions: 'KICK_MEMBERS',
       channel: 'guild',
+      userPermissions: (msg: Message) => isAdminOrOwner(msg, handler),
+      category: 'Admin',
     });
     this._logger = handler.client.log.getChildLogger({
       name: 'UnlockCmd',
