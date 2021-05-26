@@ -20,10 +20,11 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "build": "rimraf dist && tsc -b --force --verbose",
+    "build": "tsc -b --force --verbose",
     "format": "prettier --config .prettierrc ./src/**/*.ts  --write",
     "lint": "eslint ./src --ext .ts ",
     "dev": "nodemon ./src/index.ts",
+    "clean": "rimraf dist",
     "dev:debug": "nodemon --inspect ./src/index.ts",
     "db:sync": "typeorm schema:sync",
     "db:sync-dry": "typeorm schema:log"
