@@ -38,6 +38,7 @@ export default class EsxBot extends AkairoClient {
   public log: Logger = new Logger({
     name: 'Init',
     displayLoggerName: true,
+    minLevel: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
   });
 
   public isReady = false;
