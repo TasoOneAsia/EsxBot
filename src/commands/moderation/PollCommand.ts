@@ -1,24 +1,28 @@
 import { Message, MessageEmbed } from 'discord.js';
 import { Command, CommandHandler } from 'discord-akairo';
 import { Logger } from 'tslog';
-import { makeSimpleEmbed } from '../../utils';
+
+interface IPollArguments {
+  question: string;
+  options: string;
+}
 
 const reactions: { [key: number]: string } = {
-  1: '1⃣',
-  2: '2⃣',
-  3: '3⃣',
-  4: '4⃣',
-  5: '5⃣',
-  6: '6⃣',
-  7: '7⃣',
-  8: '8⃣',
-  9: '9⃣',
-  10: '🔟',
-  11: '🏷️',
-  12: '🔔',
-  13: '⚜️',
-  14: '🅰️',
-  15: '🅿️',
+  0: '1⃣',
+  1: '2⃣',
+  2: '3⃣',
+  3: '4⃣',
+  4: '5⃣',
+  5: '6⃣',
+  6: '7⃣',
+  7: '8⃣',
+  8: '9⃣',
+  9: '🔟',
+  10: '🏷️',
+  11: '🔔',
+  12: '⚜️',
+  13: '🅰️',
+  14: '🅿️',
 };
 
 export default class PollCommand extends Command {
@@ -37,6 +41,27 @@ export default class PollCommand extends Command {
       category: 'Moderation',
       clientPermissions: ['MANAGE_MESSAGES'],
       userPermissions: ['MANAGE_MESSAGES'],
+      args: [
+        {
+          id: 'question',
+          type: 'string',
+          prompt: {
+            start: 'Please provide the question of the poll.',
+          },
+        },
+        {
+          id: 'options',
+          type: 'string',
+          match: 'separate',
+          prompt: {
+            start: [
+              'What are the options to choose from? Type them in separate messages (max 15)',
+              'Type `stop` when you are done.',
+            ],
+            limit: 15,
+          },
+        },
+      ],
       channel: 'guild',
     });
 
@@ -45,56 +70,36 @@ export default class PollCommand extends Command {
       prefix: ['PollCmd'],
     });
   }
-  public async exec(msg: Message): Promise<Message | null> {
-    const regex = /"((?:\\.|[^"\\])*)"/g;
-    const matches = msg.content.match(regex);
-
-    if (matches!.length <= 0) {
-      return PollCommand._sendErrorMessage(msg, 'You need to define the poll.');
-    }
-
+  public async exec(
+    msg: Message,
+    { question, options }: IPollArguments
+  ): Promise<Message | void> {
     let answers = '';
-    if (matches!.length == 1) {
-      answers += `${reactions[1]} Yes\n${reactions[2]}  No`;
-    } else {
-      for (let i = 1; i < matches!.length; i++) {
-        answers += `${reactions[i]}  ${matches![i].replace(/^"|"$/g, '')}\n`;
-      }
+    for (let i = 0; i < options!.length; i++) {
+      answers += `${reactions[i]}  ${options![i]}\n`;
     }
 
     const msgEmbed = new MessageEmbed()
       .setTitle('ESX Poll')
       .setColor('#1E90FF')
-      .setThumbnail(<string>msg.guild?.iconURL());
-
-    msgEmbed.addFields([
-      {
-        name: 'Question',
-        value: matches![0].replace(/^"|"$/g, ''),
-        inline: false,
-      },
-      {
-        name: 'Options',
-        value: answers,
-        inline: false,
-      },
-    ]);
+      .setThumbnail(<string>msg.guild?.iconURL())
+      .addFields([
+        {
+          name: 'Question',
+          value: question,
+          inline: false,
+        },
+        {
+          name: 'Options',
+          value: answers,
+          inline: false,
+        },
+      ]);
 
     const message = await msg.channel.send(msgEmbed);
 
-    if (matches!.length == 1) {
-      message.react(reactions[1]);
-      message.react(reactions[2]);
-    } else {
-      for (let i = 1; i < matches!.length; i++) {
-        message.react(reactions[i]);
-      }
+    for (let i = 0; i < options!.length; i++) {
+      message.react(reactions[i]);
     }
-
-    return null;
-  }
-
-  private static async _sendErrorMessage(msg: Message, e: string): Promise<Message> {
-    return await msg.channel.send(makeSimpleEmbed(`**Error**: ${e}`, 'RED'));
   }
 }
