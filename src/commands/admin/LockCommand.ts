@@ -40,6 +40,10 @@ export default class LockCommand extends Command {
       return LockCommand._sendErrorMessage(msg, 'Max role was not found!');
     }
 
+    if (OverwriteBackup.get(msg.channel.id)) {
+      return LockCommand._sendErrorMessage(msg, 'Channel is already locked!');
+    }
+
     const channel = msg.channel as TextChannel;
     OverwriteBackup.set(msg.channel.id, channel.permissionOverwrites);
 
