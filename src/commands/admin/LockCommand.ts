@@ -4,8 +4,7 @@ import { Message, TextChannel } from 'discord.js';
 import { makeSimpleEmbed } from '../../utils';
 import { isAdminOrOwner } from '../../structures/permResolvers';
 
-const OverwriteBackup = new Map();
-export { OverwriteBackup };
+export const OverwriteBackup = new Map();
 
 export default class LockCommand extends Command {
   private _logger: Logger;
