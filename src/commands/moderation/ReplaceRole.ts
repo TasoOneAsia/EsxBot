@@ -51,7 +51,10 @@ export default class ReplaceRole extends Command {
     msg
       .guild!.members.fetch()
       .then((members) => {
-        return msg.reply(`fetched ${members.size} members`);
+        const membersWithRole = members.filter((u) => u.roles.cache.has(removerole.id));
+        return msg.reply(
+          `fetched ${membersWithRole.size} members with \`${removerole.name}\` role`
+        );
       })
       .catch((e) => console.log("Couldn't fetch members."));
   }
