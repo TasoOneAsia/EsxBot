@@ -132,12 +132,15 @@ export default class SetupRoleReactManager extends Manager {
       .setThumbnail(getGuildIcon(this.guildObj!))
       .setDescription(
         stripIndent`
-        *Please react to this message with ${ACKNOWLEDGE_REACT_EMOTE} after you have acknowledged the rules*
+        **Notice**: *We do not provide any public support in this Discord. If this is what you are looking for please find an ESX Support Community*.
+        *We do provide courtesy support to Patreons, in our free time.*
+
+        *Please react to this message with ${ACKNOWLEDGE_REACT_EMOTE} after you have acknowledged the rules*.
       
-        *You should receive the \`Developer\` role afterwards, and you will gain access to the rest of the guild*
+        *You should receive the \`Developer\` role afterwards, and you will gain access to the rest of the Discord*.
       `
       )
-      .setFooter('A message from the ESX Org');
+      .setFooter('A message from the ESX Team');
   }
 
   private async cacheReactChannel(reactChannel: string): Promise<void> {
