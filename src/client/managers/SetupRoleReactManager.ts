@@ -132,7 +132,6 @@ export default class SetupRoleReactManager extends Manager {
       .setThumbnail(getGuildIcon(this.guildObj!))
       .setDescription(
         stripIndent`
-
         **Notice**: *We do not provide any public support in this Discord. If this is what you are looking for please find an ESX Support Community*.
         *We do provide courtesy support to Patreons, in our free time.*
 
