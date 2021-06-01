@@ -15,7 +15,7 @@ export default class ReadyListener extends Listener {
     readyLog.info(`${this.client.user?.tag} is now online!`);
     //Sets Presence
     this.client.user?.setPresence({
-      activity: { type: 'WATCHING', name: 'over the ESX Guild' },
+      activity: { type: 'WATCHING', name: ' the ESX Discord' },
     });
 
     this.client.isReady = true;
