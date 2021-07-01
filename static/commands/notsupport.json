@@ -1,5 +1,5 @@
 {
   "aliases": ["notsup", "ns"],
-  "replyMsg": "**We do not provide public support in this Discord.**\nYou will be warned and/or muted if you ask for support of any kind.\nIf you just want support, please use one of the many support communities for ESX.\nWe are focused on the official development here.",
-  "description": "Use Support Channels"
+  "replyMsg": "**We do not provide public support in this Discord.**\nWe provide limited private support to Patreon Patrons only.\nYou can become a Patron or find one of the many ESX support discords.\nContinued support requests will result in warns or mutes.\nWe are doing this in order to focus on official development of ESX Reborn.",
+  "description": "No Public Support"
 }
