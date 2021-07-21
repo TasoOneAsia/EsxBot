@@ -5,6 +5,7 @@ import Infractions from '../../models/Infractions';
 import { AddBanData } from '../Actions';
 import { ManagerHandler } from '../../structures/managers/ManagerHandler';
 import { Logger } from 'tslog';
+
 export default class BanManager extends Manager {
   private infractionsRepo: Repository<Infractions>;
   private log: Logger;
@@ -50,15 +51,26 @@ export default class BanManager extends Manager {
     });
   }
 
-  public async delete(ban: Infractions): Promise<void> {
+  public async delete(ban: Infractions, reason?: string): Promise<void> {
     this.client.guilds.cache
       .get(ban.guildId)
-      ?.members.unban(ban.user)
+      ?.members.unban(ban.user, reason)
       .catch(() => {
         /*NOOP*/
       });
     //TODO: Not sure if this is the best way to delete the iterated row, please fix me if not
     await this.infractionsRepo.delete(ban.infractionID);
+  }
+
+  public async unban(userId: string, reason: string): Promise<boolean> {
+    const banItem = await this.infractionsRepo.findOne({
+      infractionType: 'ban',
+      user: userId,
+    });
+    if (!banItem) return false;
+    await this.delete(banItem, reason);
+    this.log.debug(`Sucessfuly unbanned ${userId}`);
+    return true;
   }
 
   public async add({ member, duration, reason, staff }: AddBanData): Promise<void> {
