@@ -108,7 +108,7 @@ export default class BanCommand extends Command {
       : 'never be lifted';
 
     const replyEmbed = makeSimpleEmbed(
-      `**${member.user.tag}** was banned for **${reason}**. The ban will ${liftMessage}`
+      `<@${member.user.id}> (**${member.user.id}**) was banned for \`${reason}\`. The ban will **${liftMessage}**`
     );
 
     return msg.channel.send(replyEmbed);
