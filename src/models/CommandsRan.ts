@@ -8,7 +8,10 @@ export default class CommandsRan {
   id!: number;
 
   @Column()
-  command!: string;
+  commandId!: string;
+
+  @Column()
+  primaryAlias!: string;
 
   @Column()
   raw!: string;

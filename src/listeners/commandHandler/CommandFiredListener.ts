@@ -26,7 +26,8 @@ export default class CommandListener extends Listener {
     this._logger.debug('Inserting command into database');
 
     await this.cmdRepo.insert({
-      command: cmd.id,
+      commandId: cmd.id,
+      primaryAlias: cmd.aliases[0],
       group: cmd.categoryID,
       commandRanBy: msg.author.id,
       raw: msg.content,

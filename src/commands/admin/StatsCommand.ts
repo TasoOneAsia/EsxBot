@@ -71,6 +71,8 @@ export default class StatsCommand extends Command {
       commandCountMap.set(command.aliases[0], commandCount);
     }
 
+    this.log.debug(totalCommandNumber);
+
     const sortedCommands = commandCountMap.sort((a, b) => b - a);
 
     const returnEmbed = new MessageEmbed()
@@ -80,6 +82,8 @@ export default class StatsCommand extends Command {
       .setTimestamp()
       .setThumbnail(<string>msg.guild!.iconURL())
       .setFooter('Finish me Taso!');
+
+    this.log.debug(sortedCommands);
 
     for (const [commandAliasPrimary, count] of sortedCommands) {
       returnEmbed.addField(
