@@ -59,6 +59,6 @@ export default class StickyMsgManager extends Manager {
   }
 
   private static formatStickyMessage(msg: string): string {
-    return `⚠ __**IMPORTANT STICKY MESSAGE**__ ⚠ \n ${msg}`;
+    return `⚠ __**IMPORTANT STICKY MESSAGE**__ ⚠ \n\n ${msg}`;
   }
 }
