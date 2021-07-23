@@ -24,13 +24,8 @@ export default class StickyMsgManager extends Manager {
 
   public async addStickyToChannel(channel: TextChannel, msg: string): Promise<void> {
     const doesChannelHaveSticky = this.stickiedChannels.has(channel.id);
-    try {
-      if (doesChannelHaveSticky) await this.deleteStickyFromChannel(channel);
-    } catch (err) {
-      this.log.silly(
-        `Unable to delete last sticky message, it probably got manually deleted`
-      );
-    }
+
+    if (doesChannelHaveSticky) await this.deleteStickyFromChannel(channel);
 
     const formattedStickyMsg = StickyMsgManager.formatStickyMessage(msg);
 
@@ -53,10 +48,16 @@ export default class StickyMsgManager extends Manager {
 
     // Sanity that msg exists
     if (!lastMsg)
-      throw new Error(`Was unable to resolve sticky message from ID: ${lastStickyMsgId}`);
+      this.log.silly(
+        `Was unable to resolve sticky message from ID: ${lastStickyMsgId} (maybe it got deleted manually)`
+      );
 
     // Delete last sticky message
-    await lastMsg.delete();
+    try {
+      await lastMsg.delete();
+    } catch (err: any) /*ugh */ {
+      this.log.silly(`Sticky: ${lastStickyMsgId} failed to delete (code: ${err?.code})`);
+    }
 
     // Remove from map
     this.stickiedChannels.delete(channel.id);
