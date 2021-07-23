@@ -24,7 +24,13 @@ export default class StickyMsgManager extends Manager {
 
   public async addStickyToChannel(channel: TextChannel, msg: string): Promise<void> {
     const doesChannelHaveSticky = this.stickiedChannels.has(channel.id);
-    if (doesChannelHaveSticky) await this.deleteStickyFromChannel(channel);
+    try {
+      if (doesChannelHaveSticky) await this.deleteStickyFromChannel(channel);
+    } catch (err) {
+      this.log.silly(
+        `Unable to delete last sticky message, it probably got manually deleted`
+      );
+    }
 
     const formattedStickyMsg = StickyMsgManager.formatStickyMessage(msg);
 
