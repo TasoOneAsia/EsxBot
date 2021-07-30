@@ -1,4 +1,5 @@
 import { Listener } from 'discord-akairo';
+import * as Config from '../../config';
 
 export default class ReadyListener extends Listener {
   public constructor() {
@@ -14,6 +15,8 @@ export default class ReadyListener extends Listener {
 
     readyLog.info(`${this.client.user?.tag} is now online!`);
     //Sets Presence
+
+    readyLog.info('Currrent Environment', Config);
     this.client.user?.setPresence({
       activity: { type: 'WATCHING', name: ' the ESX Discord' },
     });
