@@ -26,6 +26,8 @@ export default class GuildInvInhibitor extends Listener {
       msg.guild
     ) {
       // TODO: Add auto warning
+      if (msg.author.id === this.client.user?.id) return;
+
       const member = msg.guild.member(msg.author);
       // Exit if whitelisted
       for (const role of FILTER_WHITELIST_ROLES) {
