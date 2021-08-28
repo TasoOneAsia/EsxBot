@@ -36,7 +36,7 @@ export default class RoleAddReactListener extends Listener {
         return;
       }
 
-      const devRole = reaction.message.guild?.roles.cache.get(devRoleId);
+      const devRole = await reaction.message.guild?.roles.fetch(devRoleId);
 
       if (reaction.emoji.name === ACKNOWLEDGE_REACT_EMOTE && devRole) {
         this.log.debug(`Dev role applied to ${member.username}`);
