@@ -1,5 +1,8 @@
 # ESX Discord Bot
 
+This is the source code for the ESX Discord Bot.
+Some of it may be implemented incompletely.
+
 ### Basic Info
 
 Written using [Akairo](https://discord-akairo.github.io/#/) and [Discord.js](https://discord.js.org/#/)
